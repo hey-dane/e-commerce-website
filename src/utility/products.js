@@ -101,11 +101,11 @@ export const updateProduct = async (productId, updatedProductData) => {
   }
 };
 
-export const updateProductWithPatch = async (productId, updatedProductData) => {
+export const updateProductWithPatch = async (productId, updatedProductDate) => {
   try {
     const res = await fetch(`${API_BASE_URL}/products/${productId}`, {
       method: "PATCH",
-      body: JSON.stringify(updatedProductData),
+      body: JSON.stringify(updatedProductDate),
     });
     return await res.json();
   } catch (error) {

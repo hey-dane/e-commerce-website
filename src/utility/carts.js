@@ -76,7 +76,7 @@ export const updateCartProduct = async (
   userId,
   productId,
   createdDate,
-  updatedProductData
+  updatedProductDate
 ) => {
   try {
     const res = await fetch(`${API_BASE_URL}/carts/${productId}`, {
@@ -84,7 +84,7 @@ export const updateCartProduct = async (
       body: JSON.stringify({
         userId: userId,
         date: createdDate,
-        products: [{ productId: updatedProductData, quantity: 3 }],
+        products: [{ productId: updatedProductDate, quantity: 3 }],
       }),
     });
     return await res.json();
