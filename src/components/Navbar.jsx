@@ -1,14 +1,18 @@
 import { Link } from "react-router-dom";
 import React from "react";
+import { useAuth } from "../Auth/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faShoppingCart,
   faSearch,
   faBars,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function Navbar() {
-  // REPLACE
+  const { isAuthenticated, user, logout } = useAuth();
+
+  // DUMMY DATA REPLACE
   const bestsellersCategories = ["Category 1", "Category 2", "Category 3"];
   const clothesCategories = ["Category A", "Category B", "Category C"];
   const accessoriesCategories = ["Category X", "Category Y", "Category Z"];
@@ -24,7 +28,7 @@ export default function Navbar() {
               <div className="col-md-4 col-12 d-flex justify-content-center justify-content-md-start mb-3 mb-md-0">
                 <a href="#!" className="ms-md-2">
                   <img
-                    src="https://placehold.co/100x35/FFF/00a0d9/?text=store."
+                    src="https://placehold.co/100x35/FFF/9A616D/?text=shop."
                     alt="Logo"
                   />
                 </a>
@@ -70,34 +74,43 @@ export default function Navbar() {
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                      <img
-                        src="https://mdbootstrap.com/img/Photos/Avatars/img (31).jpg"
-                        className="rounded-circle"
-                        height="22"
-                        alt="User Avatar"
-                        loading="lazy"
+                      <FontAwesomeIcon
+                        icon={faUser}
+                        size="lg"
+                        style={{ color: "#9a626d" }}
                       />
                     </a>
-                    <ul
-                      className="dropdown-menu dropdown-menu-end"
-                      aria-labelledby="navbarDropdownMenuLink"
-                    >
-                      <li>
-                        <a className="dropdown-item" href="#">
-                          My profile
-                        </a>
-                      </li>
-                      <li>
-                        <a className="dropdown-item" href="#">
-                          Settings
-                        </a>
-                      </li>
-                      <li>
-                        <a className="dropdown-item" href="#">
-                          Logout
-                        </a>
-                      </li>
-                    </ul>
+                    {isAuthenticated ? (
+                      <ul
+                        className="dropdown-menu dropdown-menu-end"
+                        aria-labelledby="navbarDropdownMenuLink"
+                      >
+                        <li>
+                          <a className="dropdown-item" href="#">
+                            My profile
+                          </a>
+                        </li>
+                        <li>
+                          <a className="dropdown-item" href="#">
+                            Other
+                          </a>
+                        </li>
+                        <li>
+                          <a className="dropdown-item" href="#">
+                            Logout
+                          </a>
+                        </li>
+                      </ul>
+                    ) : (
+                      <ul
+                        className="dropdown-menu dropdown-menu-end"
+                        aria-labelledby="navbarDropdownMenuLink"
+                      >
+                        <li className="dropdown-item">
+                          <Link to="/login">Login</Link>
+                        </li>
+                      </ul>
+                    )}
                   </div>
                 </div>
               </div>
@@ -245,3 +258,19 @@ export default function Navbar() {
     </>
   );
 }
+
+/*
+{isAuthenticated ? (
+  // Render content for logged-in users
+  <div>
+    <p>Welcome, {user.username}!</p>
+    <button onClick={logout}>Logout</button>
+  </div>
+) : (
+  // Render content for non-logged-in users
+  <div>
+    <p>Please log in to access this content.</p>
+    <Link to="/login">Login</Link>
+  </div>
+)}
+*/

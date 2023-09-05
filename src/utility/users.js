@@ -40,7 +40,7 @@ export const getSortedUsers = async () => {
   }
 };
 
-export const addNewUser = async (userData) => {
+export const registerUser = async (userData) => {
   try {
     const res = await fetch(`${API_BASE_URL}/users`, {
       method: "POST",
@@ -53,7 +53,7 @@ export const addNewUser = async (userData) => {
   }
 };
 
-export const updateUser = async (userId, updatedUserData) => {
+/* export const updateUser = async (userId, updatedUserData) => {
   try {
     const res = await fetch(`${API_BASE_URL}/users/${userId}`, {
       method: "PUT",
@@ -64,7 +64,7 @@ export const updateUser = async (userId, updatedUserData) => {
     console.error("Error updating user:", error);
     throw error;
   }
-};
+}; */
 
 export const updateUserWithPatch = async (userId, updatedUserData) => {
   try {
