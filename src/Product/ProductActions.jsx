@@ -12,19 +12,6 @@ export const getAllProducts = async () => {
   }
 };
 
-export const addNewProduct = async (productData) => {
-  try {
-    const res = await fetch(`${API_BASE_URL}/products`, {
-      method: "POST",
-      body: JSON.stringify(productData),
-    });
-    return await res.json();
-  } catch (error) {
-    console.error("Error adding a new product:", error);
-    throw error;
-  }
-};
-
 export const getSingleProduct = async (id) => {
   try {
     const response = await fetch(`${API_BASE_URL}/products/${id}`);
@@ -114,20 +101,6 @@ export const updateProduct = async (Id, updatedProductData) => {
     throw error;
   }
 };
-
-export const updateProductWithPatch = async (Id, updatedProductDate) => {
-  try {
-    const res = await fetch(`${API_BASE_URL}/products/${Id}`, {
-      method: "PATCH",
-      body: JSON.stringify(updatedProductDate),
-    });
-    return await res.json();
-  } catch (error) {
-    console.error("Error updating product with PATCH:", error);
-    throw error;
-  }
-};
-
 export const deleteProduct = async (Id) => {
   try {
     const res = await fetch(`${API_BASE_URL}/products/${Id}`, {

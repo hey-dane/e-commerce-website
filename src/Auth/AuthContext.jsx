@@ -1,8 +1,17 @@
-import React, { createContext, useContext, useReducer, useEffect } from "react";
-import { loginUser } from "./AuthActions";
-// Define action types
-const LOGIN = "LOGIN";
-const LOGOUT = "LOGOUT";
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useState,
+} from "react";
+import authReducer from "./AuthReducer";
+import { loginUser, registerUser, updateUser, deleteUser } from "./AuthActions";
+import { useNavigate } from "react-router-dom";
+
+export const REGISTER = "REGISTER";
+export const LOGIN = "LOGIN";
+export const LOGOUT = "LOGOUT";
 
 const AuthContext = createContext();
 
@@ -10,121 +19,108 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
-const authReducer = (state, action) => {
-  switch (action.type) {
-    case LOGIN:
-      return {
-        ...state,
-        user: action.payload,
-        isAuthenticated: true,
-      };
-    case LOGOUT:
-      return {
-        ...state,
-        user: null,
-        isAuthenticated: false,
-      };
-    default:
-      return state;
-  }
-};
-
 export const AuthProvider = ({ children }) => {
-  const user = sessionStorage.getItem("user");
+  const navigate = useNavigate();
 
-  // Set initial state, parsing user data if it exists
-  const initialState = {
-    user: user ? JSON.parse(user) : null,
-    isAuthenticated: false, // Assuming you want to track authentication state
+  const [user, setUser] = useState({});
+  const [cart, setCart] = useState([]);
+  const [checkoutStatus, setCheckoutStatus] = useState(false);
+
+  const addToCart = (product) => {
+    setCart([...cart, product]);
   };
 
-  const [state, dispatch] = useReducer(authReducer, initialState);
+  const updateCartItem = (productId, newQuantity) => {
+    const updatedCart = cart.map((item) =>
+      item.id === productId ? { ...item, quantity: newQuantity } : item
+    );
+    setCart(updatedCart);
+  };
+
+  const removeFromCart = (productId) => {
+    const updatedCart = cart.filter((item) => item.id !== productId);
+    setCart(updatedCart);
+  };
+
+  // Function to complete the checkout process
+  const checkout = () => {
+    // Perform any necessary actions (e.g., make a purchase)
+    // Then reset the cart and set checkout status to true
+    setCart([]);
+    setCheckoutStatus(true);
+  };
 
   useEffect(() => {
-    // Check if the user is already authenticated (e.g., using a token stored in localStorage)
-    const isAuthenticated = () => {
-      // Implement your own logic here to check authentication status
-      return sessionStorage.getItem("authToken") !== null;
-    };
+    let userJSON = sessionStorage.getItem("user");
 
-    if (isAuthenticated()) {
-      // If the user is authenticated, set the user data in the context
-      const userData = {}; // Replace with your user data retrieval logic
-      dispatch({ type: LOGIN, payload: userData });
+    if (!userJSON || userJSON === "undefined") {
+      userJSON = JSON.stringify({}); // Initialize with an empty object
+      sessionStorage.setItem("user", userJSON); // Store it as 'user'
+    }
+
+    try {
+      const parsedUser = JSON.parse(userJSON);
+      setUser(parsedUser);
+    } catch (error) {
+      console.error("Error parsing user JSON:", error);
+      setUser({});
     }
   }, []);
 
+  const initial = {
+    user,
+    isAuthenticated: Object.keys(user).length > 0,
+  };
+
+  const [state, dispatch] = useReducer(authReducer, initial);
+
   const login = async (username, password) => {
     try {
-      // Call your loginUser function from API with the provided username and password
-      const user = await loginUser({ username, password });
-      dispatch({ type: LOGIN, payload: user });
-      // .setItem("authToken", user.token); // Store the token in localStorage
+      const user = await loginUser(username, password);
       sessionStorage.setItem("user", JSON.stringify(user));
+      setUser(user);
+
+      dispatch({ type: LOGIN, payload: user });
     } catch (error) {
-      // Handle login errors
       console.error("Login error:", error);
       throw error;
     }
   };
 
   const logout = () => {
-    // Clear the user data and token from the context and localStorage
-    dispatch({ type: LOGOUT });
-    // localStorage.removeItem("authToken");
     sessionStorage.removeItem("user");
+    setUser({});
+    dispatch({ type: LOGOUT });
+    navigate("/login"); // Add this line to redirect to the login page
   };
 
-  const registerUser = async (userData) => {
+  const register = async (userData) => {
     try {
-      // Call your registerUser function from API with the provided user data
-      const user = await loginUser(userData); // Use a different name here
-      dispatch({ type: LOGIN, payload: user });
-      // localStorage.setItem("authToken", user.token); // Store the token in localStorage
+      const user = await registerUser(userData); // Pass userData to registerUser
+      sessionStorage.setItem("user", JSON.stringify(user));
+      setUser(user);
+
+      dispatch({ type: REGISTER, payload: user });
     } catch (error) {
-      // Handle registration errors
       console.error("Registration error:", error);
       throw error;
     }
   };
-
-  const updateUser = async (userId, updatedUserData) => {
-    try {
-      // Call your updateUser function from API with the provided data
-      const updatedUser = await updateUser(userId, updatedUserData);
-      dispatch({ type: SOME_ACTION, payload: updatedUser });
-      return updatedUser;
-    } catch (error) {
-      console.error("Error updating user:", error);
-      throw error;
-    }
-  };
-
-  const updateUserWithPatch = async (userId, updatedUserData) => {
-    try {
-      // Call your updateUserWithPatch function from API with the provided data
-      const updatedUser = await updateUserWithPatch(userId, updatedUserData);
-      dispatch({ type: SOME_ACTION, payload: updatedUser });
-      return updatedUser;
-    } catch (error) {
-      console.error("Error updating user with PATCH:", error);
-      throw error;
-    }
-  };
-
-  const deleteUser = async (userId) => {
-    try {
-      // Call your deleteUser function from API with the provided user ID
-      await deleteUser(userId);
-      dispatch({ type: SOME_ACTION });
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      throw error;
-    }
-  };
-
   return (
-    <AuthContext.Provider value={{ ...state, login, logout, registerUser }}>
+    <AuthContext.Provider
+      value={{
+        ...state,
+        login,
+        logout,
+        register,
+        cart,
+        addToCart,
+        updateCartItem,
+        removeFromCart,
+        checkout,
+        checkoutStatus, // Make sure to include checkoutStatus in the value
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

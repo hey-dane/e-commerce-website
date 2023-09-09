@@ -6,7 +6,7 @@ export default function LoginForm() {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-  const { login, isLoading } = useAuth();
+  const { login } = useAuth();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -26,7 +26,7 @@ export default function LoginForm() {
     try {
       // Call the login function from AuthContext to authenticate the user
       await login(formData.username, formData.password);
-      navigate("/"); // Redirect to the home page on successful login
+      navigate("/");
     } catch (error) {
       console.error("An error occurred during login:", error);
       setErrorMessage("An error occurred during login. Please try again.");
@@ -109,7 +109,7 @@ export default function LoginForm() {
                       <p className="mb-5 pb-lg-2" style={{ color: "#393f81" }}>
                         Don't have an account?{" "}
                         <a href="#!" style={{ color: "#393f81" }}>
-                          Register here
+                          Register here.
                         </a>
                       </p>
                     </form>

@@ -1,5 +1,14 @@
 const API_BASE_URL = "https://fakestoreapi.com";
 
+const handleResponse = async (response) => {
+  if (response.ok) {
+    return await response.json();
+  } else {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "An error occurred.");
+  }
+};
+
 export const loginUser = async (username, password) => {
   try {
     const response = await fetch(`${API_BASE_URL}/auth/login`, {
@@ -8,35 +17,48 @@ export const loginUser = async (username, password) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        username: username,
-        password: password,
+        username,
+        password,
       }),
     });
-    const result = await response.json();
 
-    if (result.error) {
-      return { error: result.error.message };
-    }
-
-    if (result.token) {
-      sessionStorage.setItem("user", result.token);
-      return result.token;
-    }
+    const result = await handleResponse(response);
+    sessionStorage.setItem("user", JSON.stringify(result));
+    return result.token;
   } catch (error) {
-    const errorMessage =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
-
-    return { error: errorMessage };
+    console.error("Login error:", error);
+    throw error;
   }
 };
-
-export const logoutUser = async () => {
+export const registerUser = async (userData) => {
   try {
-    await sessionStorage.removeItem("user");
+    console.log("Request Data:", JSON.stringify(userData)); // Log the request data
+    const response = await fetch(`${API_BASE_URL}/users`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!response.ok) {
+      // Handle error cases here (e.g., non-2xx status codes)
+      throw new Error(`Registration failed with status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log("Registration Response:", result); // Log the response data
+
+    if (result && result.id) {
+      // Registration was successful
+      sessionStorage.setItem("user", JSON.stringify(result));
+      return result; // Return the result for further use if needed
+    } else {
+      // Handle registration error here
+      throw new Error("Registration failed. Please try again.");
+    }
   } catch (error) {
-    console.error("Error logging out:", error);
+    console.error("Error during registration:", error.message);
     throw error;
   }
 };
@@ -50,15 +72,8 @@ export const updateUser = async (userId, updatedUserData) => {
       },
       body: JSON.stringify(updatedUserData),
     });
-    const result = await response.json();
 
-    if (result.error) {
-      return { error: result.error.message };
-    }
-
-    // If the update was successful, you can return the updated user data
-    // or a success message, depending on your application's needs
-    return result; // You can customize this based on your requirements
+    return await handleResponse(response);
   } catch (error) {
     console.error("Error updating user:", error);
     throw error;
@@ -70,17 +85,15 @@ export const deleteUser = async (userId) => {
     const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
       method: "DELETE",
     });
-    const result = await response.json();
 
-    if (result.error) {
-      return { error: result.error.message };
-    }
-
-    // If the deletion was successful, you can return a success message
-    // or any relevant data, depending on your application's needs
-    return result; // You can customize this based on your requirements
+    const result = await handleResponse(response);
+    return { message: "User deleted successfully", result };
   } catch (error) {
     console.error("Error deleting user:", error);
     throw error;
   }
+};
+
+export const logoutUser = () => {
+  sessionStorage.removeItem("user");
 };

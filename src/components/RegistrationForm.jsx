@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../Auth/AuthContext";
+import { registerUser } from "../Auth/AuthActions"; // Assuming this import is correct
 
 export default function RegistrationForm() {
   const [formData, setFormData] = useState({
@@ -9,7 +9,6 @@ export default function RegistrationForm() {
     confirmPassword: "",
   });
 
-  const { registerUser } = useAuth(); // Access the registration function from AuthContext
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -35,12 +34,23 @@ export default function RegistrationForm() {
       return;
     }
 
-    setErrorMessage(""); // Clear any previous errors
+    setErrorMessage("");
 
     try {
-      // Call the registration function from AuthContext
-      await registerUser(formData.username, formData.password);
-      navigate("/login"); // Redirect to the login page after successful registration
+      const response = await registerUser({
+        username: formData.username,
+        password: formData.password,
+      });
+
+      console.log("Registration Response:", response);
+
+      if (response && response.id) {
+        // Registration successful
+        navigate("/login");
+      } else {
+        // Handle registration error here
+        setErrorMessage("Registration failed. Please try again.");
+      }
     } catch (error) {
       console.error("An error occurred during registration:", error);
       setErrorMessage(
