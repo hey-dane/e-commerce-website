@@ -1,1 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Arvo:ital@0;1&family=Lato:ital,wght@0,100;1,100&family=Luckiest+Guy&display=swap");
+
+.navbar-category {
+  font-size: 30px;
+  text-transform: uppercase;
+}

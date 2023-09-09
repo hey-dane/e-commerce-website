@@ -1,141 +1,108 @@
-// cart
+const LOCAL_STORAGE_KEY = "carts";
 
-const API_BASE_URL = "https://fakestoreapi.com";
-
-export const getAllCarts = async () => {
-  try {
-    const res = await fetch(`${API_BASE_URL}/carts`);
-    return await res.json();
-  } catch (error) {
-    console.error("Error fetching all carts:", error);
-    throw error;
-  }
+const getLocalStorageData = () => {
+  const data = localStorage.getItem(LOCAL_STORAGE_KEY);
+  return data ? JSON.parse(data) : [];
 };
 
-export const getSingleCart = async (cartId) => {
-  try {
-    const res = await fetch(`${API_BASE_URL}/carts/${cartId}`);
-    return await res.json();
-  } catch (error) {
-    console.error("Error fetching a single cart:", error);
-    throw error;
-  }
+const setLocalStorageData = (data) => {
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
 };
 
-export const getLimitedCartView = async () => {
-  try {
-    const res = await fetch(`${API_BASE_URL}/carts?limit=5`);
-    return await res.json();
-  } catch (error) {
-    console.error("Error fetching limited cart view:", error);
-    throw error;
-  }
+// cart.js
+export const getAllCarts = () => {
+  return getLocalStorageData();
 };
 
-export const getSortedCart = async () => {
-  try {
-    const res = await fetch(`${API_BASE_URL}/carts?sort=desc`);
-    return await res.json();
-  } catch (error) {
-    console.error("Error fetching sorted products:", error);
-    throw error;
-  }
+export const getSingleCart = (cartId) => {
+  const carts = getLocalStorageData();
+  return carts.find((cart) => cart.id === cartId) || null;
 };
 
-export const getUserCarts = async (userId) => {
-  try {
-    const res = await fetch(`${API_BASE_URL}/carts/${userId}`);
-    return await res.json();
-  } catch (error) {
-    console.error("Error fetching user's carts:", error);
-    throw error;
-  }
+export const getLimitedCartView = () => {
+  const carts = getLocalStorageData();
+  return carts.slice(0, 5);
 };
 
-export const addProductToCart = async (userId, productId, createdDate) => {
-  try {
-    const res = await fetch(`${API_BASE_URL}/carts`, {
-      method: "POST",
-      body: JSON.stringify({
-        userId: userId,
-        date: createdDate,
-        products: [
-          { productId: productId, quantity: 1 },
-          { productId: productId, quantity: 5 },
-        ],
-      }),
-    });
-    return await res.json();
-  } catch (error) {
-    console.error("Error adding product to cart:", error);
-    throw error;
-  }
+export const getSortedCart = () => {
+  const carts = getLocalStorageData();
+  return carts.sort((a, b) => b.date - a.date); // Assuming date is in a sortable format
 };
 
-export const updateCartProduct = async (
+export const getUserCarts = (userId) => {
+  const carts = getLocalStorageData();
+  return carts.filter((cart) => cart.userId === userId);
+};
+
+export const addProductToCart = (userId, productId, createdDate) => {
+  const carts = getLocalStorageData();
+  const newCart = {
+    id: new Date().getTime().toString(),
+    userId,
+    date: createdDate,
+    products: [
+      { productId: productId, quantity: 1 },
+      { productId: productId, quantity: 5 },
+    ],
+  };
+
+  carts.push(newCart);
+  setLocalStorageData(carts);
+  return newCart;
+};
+
+export const updateCartProduct = (
   userId,
   productId,
   createdDate,
   updatedProductDate
 ) => {
-  try {
-    const res = await fetch(`${API_BASE_URL}/carts/${productId}`, {
-      method: "PUT",
-      body: JSON.stringify({
-        userId: userId,
-        date: createdDate,
-        products: [{ productId: updatedProductDate, quantity: 3 }],
-      }),
-    });
-    return await res.json();
-  } catch (error) {
-    console.error("Error updating cart product:", error);
-    throw error;
+  const carts = getLocalStorageData();
+  const cartIndex = carts.findIndex((cart) => cart.id === productId);
+
+  if (cartIndex !== -1) {
+    carts[cartIndex].products = carts[cartIndex].products.map((product) =>
+      product.productId === productId
+        ? { ...product, date: updatedProductDate }
+        : product
+    );
+    setLocalStorageData(carts);
+    return carts[cartIndex];
+  } else {
+    throw new Error("Cart not found");
   }
 };
 
-export const updateCartProductWithPatch = async (
+export const updateCartProductWithPatch = (
   userId,
   productId,
   createdDate,
   updatedProductData
 ) => {
-  try {
-    const res = await fetch(`${API_BASE_URL}/carts/${productId}`, {
-      method: "PATCH",
-      body: JSON.stringify({
-        userId: userId,
-        date: createdDate,
-        products: [{ productId: updatedProductData, quantity: 3 }],
-      }),
-    });
-    return await res.json();
-  } catch (error) {
-    console.error("Error updating cart product with PATCH:", error);
-    throw error;
-  }
-};
+  const carts = getLocalStorageData();
+  const cartIndex = carts.findIndex((cart) => cart.id === productId);
 
-export const deleteCart = async (cartId) => {
-  try {
-    const res = await fetch(`${API_BASE_URL}/carts/${cartId}`, {
-      method: "DELETE",
-    });
-    return await res.json();
-  } catch (error) {
-    console.error("Error deleting cart:", error);
-    throw error;
-  }
-};
-
-export const getCartsInDateRange = async () => {
-  try {
-    const res = await fetch(
-      `${API_BASE_URL}/carts?startdate=2023-09-01&enddate=2024-12-31'`
+  if (cartIndex !== -1) {
+    carts[cartIndex].products = carts[cartIndex].products.map((product) =>
+      product.productId === productId
+        ? { ...product, ...updatedProductData }
+        : product
     );
-    return await res.json();
-  } catch (error) {
-    console.error("Error fetching carts within date range:", error);
-    throw error;
+    setLocalStorageData(carts);
+    return carts[cartIndex];
+  } else {
+    throw new Error("Cart not found");
   }
+};
+
+export const deleteCart = (cartId) => {
+  const carts = getLocalStorageData();
+  const updatedCarts = carts.filter((cart) => cart.id !== cartId);
+  setLocalStorageData(updatedCarts);
+  return { success: true };
+};
+
+export const getCartsInDateRange = (startDate, endDate) => {
+  const carts = getLocalStorageData();
+  return carts.filter((cart) => cart.date >= startDate && cart.date <= endDate);
 };
