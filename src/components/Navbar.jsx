@@ -1,18 +1,22 @@
 import { Link } from "react-router-dom";
 import React from "react";
+import { useAuth } from "../Auth/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faShoppingCart,
   faSearch,
   faBars,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function Navbar() {
-  // REPLACE
-  const bestsellersCategories = ["Category 1", "Category 2", "Category 3"];
-  const clothesCategories = ["Category A", "Category B", "Category C"];
-  const accessoriesCategories = ["Category X", "Category Y", "Category Z"];
-  const electronicsCategories = ["Category I", "Category II", "Category III"];
+  const { isAuthenticated, user, logout } = useAuth();
+
+  // DUMMY DATA REPLACE
+  const bestsellersCategories = ["All Products"];
+  const clothesCategories = ["MENS", "WOMENS"];
+  const accessoriesCategories = ["JEWELERY"];
+  const electronicsCategories = ["VIEW ALL"];
 
   return (
     <>
@@ -22,12 +26,12 @@ export default function Navbar() {
             <div className="row">
               {/* Left elements */}
               <div className="col-md-4 col-12 d-flex justify-content-center justify-content-md-start mb-3 mb-md-0">
-                <a href="#!" className="ms-md-2">
+                <Link to="/">
                   <img
-                    src="https://placehold.co/100x35/FFF/00a0d9/?text=store."
+                    src="https://placehold.co/100x35/FFF/9A616D/?text=shop."
                     alt="Logo"
                   />
-                </a>
+                </Link>
               </div>
               {/* Left elements */}
 
@@ -37,6 +41,7 @@ export default function Navbar() {
                   <input
                     autoComplete="off"
                     type="search"
+                    id="search"
                     className="form-control rounded"
                     placeholder="Search"
                   />
@@ -61,44 +66,70 @@ export default function Navbar() {
                   </a>
 
                   {/* User */}
-                  <div className="dropdown">
-                    <a
-                      className="text-reset dropdown-toggle d-flex align-items-center hidden-arrow"
-                      href="#"
-                      id="navbarDropdownMenuLink"
-                      role="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      <img
-                        src="https://mdbootstrap.com/img/Photos/Avatars/img (31).jpg"
-                        className="rounded-circle"
-                        height="22"
-                        alt="User Avatar"
-                        loading="lazy"
-                      />
-                    </a>
-                    <ul
-                      className="dropdown-menu dropdown-menu-end"
-                      aria-labelledby="navbarDropdownMenuLink"
-                    >
-                      <li>
-                        <a className="dropdown-item" href="#">
-                          My profile
-                        </a>
-                      </li>
-                      <li>
-                        <a className="dropdown-item" href="#">
-                          Settings
-                        </a>
-                      </li>
-                      <li>
-                        <a className="dropdown-item" href="#">
-                          Logout
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
+                  {isAuthenticated && (
+                    <div className="dropdown">
+                      <a
+                        className="text-reset dropdown-toggle d-flex align-items-center hidden-arrow"
+                        href="#"
+                        id="navbarDropdownMenuLink"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <FontAwesomeIcon
+                          icon={faUser}
+                          size="lg"
+                          style={{ color: "#9a626d" }}
+                        />
+                      </a>
+                      <ul
+                        className="dropdown-menu dropdown-menu-end"
+                        aria-labelledby="navbarDropdownMenuLink"
+                      >
+                        <li>
+                          <a className="dropdown-item" href="#">
+                            My profile
+                          </a>
+                        </li>
+                        <li>
+                          <a className="dropdown-item" href="#">
+                            Other
+                          </a>
+                        </li>
+                        <li>
+                          <a className="dropdown-item" onClick={logout}>
+                            Logout
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                  {!isAuthenticated && (
+                    <div className="dropdown">
+                      <a
+                        className="text-reset dropdown-toggle d-flex align-items-center hidden-arrow"
+                        href="#"
+                        id="navbarDropdownMenuLink"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <FontAwesomeIcon
+                          icon={faUser}
+                          size="lg"
+                          style={{ color: "#9a626d" }}
+                        />
+                      </a>
+                      <ul
+                        className="dropdown-menu dropdown-menu-end"
+                        aria-labelledby="navbarDropdownMenuLink"
+                      >
+                        <li className="dropdown-item">
+                          <Link to="/login">Login</Link>
+                        </li>
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </div>
               {/* Right elements */}
@@ -144,9 +175,9 @@ export default function Navbar() {
                     >
                       {bestsellersCategories.map((category, index) => (
                         <li key={index}>
-                          <a className="dropdown-item" href="#">
+                          <Link to={`/allproducts`} className="dropdown-item">
                             {category}
-                          </a>
+                          </Link>
                         </li>
                       ))}
                     </ul>
@@ -170,13 +201,16 @@ export default function Navbar() {
                       className="dropdown-menu"
                       aria-labelledby="clothesDropdown"
                     >
-                      {clothesCategories.map((category, index) => (
-                        <li key={index}>
-                          <a className="dropdown-item" href="#">
-                            {category}
-                          </a>
-                        </li>
-                      ))}
+                      <li>
+                        <Link to={`/mens`} className="dropdown-item">
+                          Mens
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to={`/womens`} className="dropdown-item">
+                          Womens
+                        </Link>
+                      </li>
                     </ul>
                   </div>
                 </li>
@@ -199,9 +233,9 @@ export default function Navbar() {
                     >
                       {accessoriesCategories.map((category, index) => (
                         <li key={index}>
-                          <a className="dropdown-item" href="#">
+                          <Link to={`/jewelery`} className="dropdown-item">
                             {category}
-                          </a>
+                          </Link>
                         </li>
                       ))}
                     </ul>
@@ -226,9 +260,9 @@ export default function Navbar() {
                     >
                       {electronicsCategories.map((category, index) => (
                         <li key={index}>
-                          <a className="dropdown-item" href="#">
+                          <Link to={`/electronics`} className="dropdown-item">
                             {category}
-                          </a>
+                          </Link>
                         </li>
                       ))}
                     </ul>

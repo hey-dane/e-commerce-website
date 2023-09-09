@@ -1,37 +1,35 @@
-import React, { useState, useEffect } from "react";
-import { getAllProducts } from "../utility/products/";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useProduct } from "../Product/ProductContext";
 
 export default function AllProducts() {
-  const [products, setProducts] = useState([]);
-  /* const [searchInput, setSearchInput] = useState("");
-  const navigate = useNavigate(); */
+  const { products, dispatch, getAllProducts } = useProduct();
 
   useEffect(() => {
-    async function loadAllProducts() {
+    async function fetchProducts() {
       try {
-        const productsData = await getAllProducts();
-        setProducts(productsData);
+        const fetchedProducts = await getAllProducts();
+        dispatch({ type: "SET_PRODUCTS", products: fetchedProducts });
       } catch (error) {
         console.error("Error loading products.", error);
       }
     }
-    loadAllProducts();
-  }, []);
+    fetchProducts();
+  }, [dispatch]);
 
   return (
     <div>
       <h1>All Products</h1>
       <ul>
-        {products.map((product) => (
-          <li key={product.id}>
-            <h2>{product.title}</h2>
-            <p>Price: ${product.price}</p>
-            <p>Category: {product.category}</p>
-            <p>Description: {product.description}</p>
-            <img src={product.image} alt={product.title} />
-          </li>
-        ))}
+        {products &&
+          products.map((product) => (
+            <li key={product.id}>
+              <h2>
+                <Link to={`/products/${product.id}`}>{product.title}</Link>
+              </h2>
+              <img src={product.image} alt={product.title} />
+            </li>
+          ))}
       </ul>
     </div>
   );

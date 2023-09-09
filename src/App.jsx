@@ -5,6 +5,9 @@ import "./App.css";
 import AllProducts from "./pages/AllProducts";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import Login from "./pages/Login";
+import RegistrationForm from "./components/RegistrationForm";
+import SingleProductView from "./pages/SingleProductView";
 
 function App() {
   return (
@@ -13,6 +16,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/allproducts" element={<AllProducts />} />
+        <Route path="/products/:id" element={<SingleProductView />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/registrationform" element={<RegistrationForm />} />
       </Routes>
     </>
   );
