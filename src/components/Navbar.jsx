@@ -10,6 +10,7 @@ import {
   faBars,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { getSingleProduct } from "../Product/ProductActions";
 
 export default function Navbar({ onSearch }) {
   const { isAuthenticated, user, logout } = useAuth();
@@ -30,7 +31,7 @@ export default function Navbar({ onSearch }) {
 
   // Drop Down Categories
   const bestsellersCategories = ["All Products"];
-  const clothesCategories = ["MENS", "WOMENS"];
+  const clothesCategories = ["MEN'S CLOTHING", "WOMEN'S CLOTHING"];
   const accessoriesCategories = ["JEWELERY"];
   const electronicsCategories = ["ELECTRONICS"];
 
@@ -46,9 +47,17 @@ export default function Navbar({ onSearch }) {
     const pathname = location.pathname;
 
     if (pathname.startsWith("/category/")) {
-      // Extract the category from the URL pathname
+      // Extract the category from the URL pathname for category views
       const category = pathname.replace("/category/", "").replace("-", " ");
       setCurrentCategory(category);
+    } else if (pathname.startsWith("/products/")) {
+      // For single product view, the category should be fetched from the API response
+      // Call your modified getSingleProduct function here to fetch the category
+      // Update setCurrentCategory with the category fetched from the API response
+      const productId = pathname.split("/")[2];
+      getSingleProduct(productId)
+        .then((productData) => setCurrentCategory(productData.category))
+        .catch((error) => console.error("Error fetching product:", error));
     } else if (pathname === "/cart") {
       // Handle the cart route specifically
       setCurrentCategory("Cart");
@@ -56,7 +65,6 @@ export default function Navbar({ onSearch }) {
       setCurrentCategory("All Products");
     }
   }, [location]);
-
   return (
     <>
       <header>

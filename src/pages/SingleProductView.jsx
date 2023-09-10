@@ -8,12 +8,14 @@ export default function SingleProductView() {
   const { id } = useParams();
   const { addToCart } = useCart();
   const navigate = useNavigate();
+  const [currentCategory, setCurrentCategory] = useState(""); // Initialize currentCategory state
 
   useEffect(() => {
     const getProduct = async () => {
       try {
         const productData = await getSingleProduct(id);
         setProduct(productData);
+        setCurrentCategory(productData.category);
       } catch (error) {
         console.error("Error fetching product:", error);
       }
