@@ -1,99 +1,73 @@
 const API_BASE_URL = "https://fakestoreapi.com";
 
-const handleResponse = async (response) => {
-  if (response.ok) {
-    return await response.json();
-  } else {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "An error occurred.");
-  }
+// Function to check if the page is being reloaded
+const isPageReloaded = () => {
+  return !performance.navigation.type || performance.navigation.type === 1;
 };
 
-export const loginUser = async (username, password) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    });
-
-    const result = await handleResponse(response);
-    sessionStorage.setItem("user", JSON.stringify(result));
-    return result.token;
-  } catch (error) {
-    console.error("Login error:", error);
-    throw error;
-  }
+// Function to clear user data from local storage
+const clearUserDataFromLocalStorage = () => {
+  localStorage.removeItem("user");
 };
+
+// Mock Registration
 export const registerUser = async (userData) => {
-  try {
-    console.log("Request Data:", JSON.stringify(userData)); // Log the request data
-    const response = await fetch(`${API_BASE_URL}/users`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
+  const existingUsers = JSON.parse(localStorage.getItem("users") || "[]");
+  const userExists = existingUsers.some(
+    (user) => user.username === userData.username
+  );
 
-    if (!response.ok) {
-      // Handle error cases here (e.g., non-2xx status codes)
-      throw new Error(`Registration failed with status: ${response.status}`);
-    }
-
-    const result = await response.json();
-    console.log("Registration Response:", result); // Log the response data
-
-    if (result && result.id) {
-      // Registration was successful
-      sessionStorage.setItem("user", JSON.stringify(result));
-      return result; // Return the result for further use if needed
-    } else {
-      // Handle registration error here
-      throw new Error("Registration failed. Please try again.");
-    }
-  } catch (error) {
-    console.error("Error during registration:", error.message);
-    throw error;
+  if (userExists) {
+    throw new Error("Username already exists. Please try another.");
   }
+
+  const newUser = {
+    ...userData,
+    id: Date.now(), // Giving a mock ID
+  };
+
+  existingUsers.push(newUser);
+  localStorage.setItem("users", JSON.stringify(existingUsers));
+
+  localStorage.setItem("user", JSON.stringify(newUser)); // Set this user as the currently logged in user
+
+  // Clear user data from local storage if the page is reloaded
+  if (isPageReloaded()) {
+    clearUserDataFromLocalStorage();
+  }
+
+  return newUser;
 };
 
-export const updateUser = async (userId, updatedUserData) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedUserData),
-    });
+// Mock Authentication
+export const loginUser = async (username, password) => {
+  const users = JSON.parse(localStorage.getItem("users") || "[]");
 
-    return await handleResponse(response);
-  } catch (error) {
-    console.error("Error updating user:", error);
-    throw error;
+  const foundUser = users.find(
+    (user) => user.username === username && user.password === password
+  );
+
+  if (!foundUser) {
+    throw new Error("Invalid username or password.");
   }
+
+  localStorage.setItem("user", JSON.stringify(foundUser)); // Set this user as the currently logged in user
+
+  // Clear user data from local storage if the page is reloaded
+  if (isPageReloaded()) {
+    clearUserDataFromLocalStorage();
+  }
+
+  return foundUser.token || "mock_token_for_" + username; // Return a mock token or an actual one if you have it in user data
 };
 
-export const deleteUser = async (userId) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
-      method: "DELETE",
-    });
-
-    const result = await handleResponse(response);
-    return { message: "User deleted successfully", result };
-  } catch (error) {
-    console.error("Error deleting user:", error);
-    throw error;
-  }
-};
-
+// Function to log the user out and clear data from local storage
 export const logoutUser = () => {
-  sessionStorage.removeItem("user");
+  clearUserDataFromLocalStorage();
+};
+
+// Function to get the currently logged-in user from local storage
+export const getLoggedInUser = () => {
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  return user;
 };

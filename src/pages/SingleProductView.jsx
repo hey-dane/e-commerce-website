@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../Auth/AuthContext";
 import { getSingleProduct } from "../Product/ProductActions";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useCart } from "../Cart/CartContext";
 
 export default function SingleProductView() {
   const [product, setProduct] = useState({});
-  const { addToCart } = useAuth();
-  const { id } = useParams(); // Get the id from the route
+  const { id } = useParams();
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getProduct = async () => {
@@ -21,19 +22,14 @@ export default function SingleProductView() {
     getProduct();
   }, [id]);
 
+  const handleAddToCart = (product) => {
+    addToCart(product);
+    navigate("/cart");
+  };
+
   if (!product) {
     return <div>Loading product...</div>;
   }
-
-  const handleAddToCart = () => {
-    const productToAdd = {
-      id: product.id,
-      name: product.title,
-      price: product.price,
-      quantity: 1,
-    };
-    addToCart(productToAdd);
-  };
 
   return (
     <div key={product.id}>
@@ -42,7 +38,7 @@ export default function SingleProductView() {
       <p>Category: {product.category}</p>
       <p>Description: {product.description}</p>
       <img src={product.image} alt={product.title} />
-      <button onClick={handleAddToCart}>Add to Cart</button>
+      <button onClick={() => handleAddToCart(product)}>Add to Cart</button>
     </div>
   );
 }

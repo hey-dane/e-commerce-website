@@ -1,13 +1,14 @@
-import React, { createContext, useContext, useReducer, useEffect } from "react";
-import cartReducer from "./CartReducer";
-import {
-  addProductToCart,
-  updateCartProduct,
-  removeProductFromCart,
-  checkoutCart,
-} from "./CartActions";
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useState,
+} from "react";
+import { getLocalStorageCart, setLocalStorageCart } from "./CartActions";
+import cartReducer from "./cartReducer";
 
-const CartContext = createContext();
+export const CartContext = createContext();
 
 export const useCart = () => {
   return useContext(CartContext);
@@ -15,40 +16,55 @@ export const useCart = () => {
 
 export const CartProvider = ({ children }) => {
   const [cart, dispatch] = useReducer(cartReducer, []);
+  const [cartQuantity, setCartQuantity] = useState(0); // Add cartQuantity state
+
+  useEffect(() => {
+    // Load cart items from local storage
+    const storedCart = getLocalStorageCart();
+    if (storedCart && storedCart.length > 0) {
+      dispatch({ type: "INITIALIZE_CART", cart: storedCart });
+    }
+  }, []);
 
   const addToCart = (product) => {
-    dispatch(addProductToCart(product));
+    dispatch({ type: "ADD_TO_CART", product });
+    setLocalStorageCart([...cart, product]);
   };
 
-  const updateCartItem = (productId, newQuantity) => {
-    dispatch(updateCartProduct(productId, newQuantity));
+  const updateCartProduct = (productId, newQuantity) => {
+    dispatch({ type: "UPDATE_CART_PRODUCT", productId, newQuantity });
   };
 
   const removeFromCart = (productId) => {
-    dispatch(removeProductFromCart(productId));
+    dispatch({ type: "REMOVE_FROM_CART", productId });
   };
 
   const checkout = () => {
-    checkoutCart(cart)
-      .then(() => {
-        // Clear the cart or perform any other necessary actions
-        dispatch({ type: "CLEAR_CART" });
-      })
-      .catch((error) => {
-        console.error("Checkout error:", error);
-      });
+    dispatch({ type: "EMPTY_CART" });
+    setLocalStorageCart([]); // Clears cart data from local storage
   };
 
   useEffect(() => {
-    // You can load the initial cart data here if needed
-  }, []);
+    setLocalStorageCart(cart);
+  }, [cart]);
+
+  useEffect(() => {
+    // Calculate the total cart quantity
+    const totalQuantity = cart.reduce(
+      (total, product) => total + product.quantity,
+      0
+    );
+    setCartQuantity(totalQuantity);
+  }, [cart]);
 
   return (
     <CartContext.Provider
       value={{
         cart,
+        cartQuantity,
+        dispatch,
         addToCart,
-        updateCartItem,
+        updateCartProduct,
         removeFromCart,
         checkout,
       }}

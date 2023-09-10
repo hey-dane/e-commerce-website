@@ -1,6 +1,8 @@
-import { Link } from "react-router-dom";
-import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
 import { useAuth } from "../Auth/AuthContext";
+import { CartContext } from "../Cart/CartContext";
+import { useSearch } from "./SearchContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faShoppingCart,
@@ -9,14 +11,51 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
-export default function Navbar() {
+export default function Navbar({ onSearch }) {
   const { isAuthenticated, user, logout } = useAuth();
+  const { searchQuery, setSearchQuery } = useSearch();
+  const [query, setQuery] = useState("");
+  const location = useLocation();
+  const [currentCategory, setCurrentCategory] = useState("All Products");
+  const { cartQuantity } = useContext(CartContext);
 
-  // DUMMY DATA REPLACE
+  const handleInputChange = (e) => {
+    setQuery(e.target.value);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    setSearchQuery(query);
+  };
+
+  // Drop Down Categories
   const bestsellersCategories = ["All Products"];
   const clothesCategories = ["MENS", "WOMENS"];
   const accessoriesCategories = ["JEWELERY"];
-  const electronicsCategories = ["VIEW ALL"];
+  const electronicsCategories = ["ELECTRONICS"];
+
+  const allCategories = [
+    ...bestsellersCategories,
+    ...clothesCategories,
+    ...accessoriesCategories,
+    ...electronicsCategories,
+  ];
+
+  // Determine the current category based on the route
+  useEffect(() => {
+    const pathname = location.pathname;
+
+    if (pathname.startsWith("/category/")) {
+      // Extract the category from the URL pathname
+      const category = pathname.replace("/category/", "").replace("-", " ");
+      setCurrentCategory(category);
+    } else if (pathname === "/cart") {
+      // Handle the cart route specifically
+      setCurrentCategory("Cart");
+    } else {
+      setCurrentCategory("All Products");
+    }
+  }, [location]);
 
   return (
     <>
@@ -37,17 +76,25 @@ export default function Navbar() {
 
               {/* Center elements */}
               <div className="col-md-4 col-12">
-                <form className="d-flex input-group w-auto my-auto mb-3 mb-md-0">
+                <form
+                  onSubmit={handleSearchSubmit} // Use onSubmit to handle form submission
+                  className="d-flex input-group w-auto my-auto mb-3 mb-md-0"
+                >
                   <input
                     autoComplete="off"
                     type="search"
                     id="search"
                     className="form-control rounded"
                     placeholder="Search"
+                    value={query}
+                    onChange={handleInputChange}
                   />
-                  <span className="input-group-text border-0 d-none d-lg-flex">
-                    <FontAwesomeIcon icon={faSearch} />
-                  </span>
+                  <button type="submit" className="btn btn-outline-secondary">
+                    <FontAwesomeIcon
+                      icon={faSearch}
+                      style={{ color: "#9a626d" }}
+                    />
+                  </button>
                 </form>
               </div>
               {/* Center elements */}
@@ -55,15 +102,17 @@ export default function Navbar() {
               {/* Right elements */}
               <div className="col-md-4 col-12 d-flex justify-content-center justify-content-md-end align-items-center">
                 <div className="d-flex">
-                  {/* Cart */}
-                  <a className="text-reset me-3" href="#">
+                  <Link to="/cart" className="text-reset me-3">
                     <span>
-                      <FontAwesomeIcon icon={faShoppingCart} />
+                      <FontAwesomeIcon
+                        icon={faShoppingCart}
+                        style={{ color: "#9a626d" }}
+                      />
                     </span>
                     <span className="badge rounded-pill badge-notification bg-danger">
-                      1
+                      {cartQuantity}
                     </span>
-                  </a>
+                  </Link>
 
                   {/* User */}
                   {isAuthenticated && (
@@ -186,7 +235,6 @@ export default function Navbar() {
 
                 <li className="nav-item">
                   <div className="dropdown">
-                    {/* Dropdown for Clothes */}
                     <a
                       className="nav-link dropdown-toggle"
                       href="#"
@@ -201,16 +249,18 @@ export default function Navbar() {
                       className="dropdown-menu"
                       aria-labelledby="clothesDropdown"
                     >
-                      <li>
-                        <Link to={`/mens`} className="dropdown-item">
-                          Mens
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to={`/womens`} className="dropdown-item">
-                          Womens
-                        </Link>
-                      </li>
+                      {clothesCategories.map((category) => (
+                        <li key={category}>
+                          <Link
+                            to={`/category/${category
+                              .toLowerCase()
+                              .replace(" ", "-")}`}
+                            className="dropdown-item"
+                          >
+                            {category}
+                          </Link>
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 </li>
@@ -233,7 +283,12 @@ export default function Navbar() {
                     >
                       {accessoriesCategories.map((category, index) => (
                         <li key={index}>
-                          <Link to={`/jewelery`} className="dropdown-item">
+                          <Link
+                            to={`/category/${category
+                              .toLowerCase()
+                              .replace(" ", "-")}`}
+                            className="dropdown-item"
+                          >
                             {category}
                           </Link>
                         </li>
@@ -260,7 +315,12 @@ export default function Navbar() {
                     >
                       {electronicsCategories.map((category, index) => (
                         <li key={index}>
-                          <Link to={`/electronics`} className="dropdown-item">
+                          <Link
+                            to={`/category/${category
+                              .toLowerCase()
+                              .replace(" ", "-")}`}
+                            className="dropdown-item"
+                          >
                             {category}
                           </Link>
                         </li>
@@ -275,6 +335,11 @@ export default function Navbar() {
           {/* Container wrapper */}
         </nav>
         {/* Navbar */}
+        {/* Jumbotron */}
+        <div className="p-5 text-center bg-light">
+          <div className="navbar-category mb-0 h3">{currentCategory}</div>
+        </div>
+        {/* Jumbotron */}
       </header>
     </>
   );
