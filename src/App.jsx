@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import RegistrationForm from "./components/RegistrationForm";
 import SingleProductView from "./pages/SingleProductView";
 import Categories from "./components/Categories";
+import Cart from "./pages/Cart";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/allproducts" element={<AllProducts />} />
         <Route path="/category/:categoryName" element={<Categories />} />
         <Route path="/products/:id" element={<SingleProductView />} />
+        <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registrationform" element={<RegistrationForm />} />
       </Routes>

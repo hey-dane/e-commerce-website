@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useAuth } from "../Auth/AuthContext";
+import { CartContext } from "../Cart/CartContext";
 import { useSearch } from "./SearchContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -15,7 +16,8 @@ export default function Navbar({ onSearch }) {
   const { searchQuery, setSearchQuery } = useSearch();
   const [query, setQuery] = useState("");
   const location = useLocation();
-  const [currentCategory, setCurrentCategory] = useState("All Products"); // Initialize with a default category
+  const [currentCategory, setCurrentCategory] = useState("All Products");
+  const { cartQuantity } = useContext(CartContext);
 
   const handleInputChange = (e) => {
     setQuery(e.target.value);
@@ -39,12 +41,17 @@ export default function Navbar({ onSearch }) {
     ...electronicsCategories,
   ];
 
+  // Determine the current category based on the route
   useEffect(() => {
-    // Extract the category from the URL pathname
     const pathname = location.pathname;
+
     if (pathname.startsWith("/category/")) {
+      // Extract the category from the URL pathname
       const category = pathname.replace("/category/", "").replace("-", " ");
       setCurrentCategory(category);
+    } else if (pathname === "/cart") {
+      // Handle the cart route specifically
+      setCurrentCategory("Cart");
     } else {
       setCurrentCategory("All Products");
     }
@@ -83,7 +90,10 @@ export default function Navbar({ onSearch }) {
                     onChange={handleInputChange}
                   />
                   <button type="submit" className="btn btn-outline-secondary">
-                    <FontAwesomeIcon icon={faSearch} />
+                    <FontAwesomeIcon
+                      icon={faSearch}
+                      style={{ color: "#9a626d" }}
+                    />
                   </button>
                 </form>
               </div>
@@ -92,15 +102,17 @@ export default function Navbar({ onSearch }) {
               {/* Right elements */}
               <div className="col-md-4 col-12 d-flex justify-content-center justify-content-md-end align-items-center">
                 <div className="d-flex">
-                  {/* Cart */}
-                  <a className="text-reset me-3" href="#">
+                  <Link to="/cart" className="text-reset me-3">
                     <span>
-                      <FontAwesomeIcon icon={faShoppingCart} />
+                      <FontAwesomeIcon
+                        icon={faShoppingCart}
+                        style={{ color: "#9a626d" }}
+                      />
                     </span>
                     <span className="badge rounded-pill badge-notification bg-danger">
-                      1
+                      {cartQuantity}
                     </span>
-                  </a>
+                  </Link>
 
                   {/* User */}
                   {isAuthenticated && (
