@@ -4,3 +4,27 @@
   font-size: 30px;
   text-transform: uppercase;
 }
+
+h5 {
+  font-size: 20px;
+}
+
+h6 {
+  font-size: 16px;
+  font-style: italic;
+}
+
+li {
+  list-style: none;
+}
+
+/* CSS styles */
+@media (min-width: 992px) {
+  #navbarNav {
+    display: flex !important;
+  }
+
+  .navbar-toggler {
+    display: none;
+  }
+}

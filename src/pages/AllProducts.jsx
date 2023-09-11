@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { useProduct } from "../Product/ProductContext";
 import { useSearch } from "../components/SearchContext";
+import IndexCard from "../components/IndexCard";
 
 export default function AllProducts() {
   const { products, dispatch, getAllProducts } = useProduct();
@@ -40,17 +40,12 @@ export default function AllProducts() {
   return (
     <div>
       <h1>All Products</h1>
-      <ul>
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
         {filteredProducts &&
           filteredProducts.map((product) => (
-            <li key={product.id}>
-              <h2>
-                <Link to={`/products/${product.id}`}>{product.title}</Link>
-              </h2>
-              <img src={product.image} alt={product.title} />
-            </li>
+            <IndexCard key={product.id} product={product} />
           ))}
-      </ul>
+      </div>
     </div>
   );
 }
