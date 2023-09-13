@@ -1,8 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 import React, { useState, useEffect, useContext } from "react";
-import { useAuth } from "../Auth/AuthContext";
-import { CartContext } from "../Cart/CartContext";
-import { useSearch } from "./SearchContext";
+import { useAuth } from "../context/Auth/AuthContext";
+import { CartContext } from "../context/Cart/CartContext";
+import { useSearch } from "../Search/SearchContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faShoppingCart,
@@ -10,7 +10,7 @@ import {
   faBars,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { getSingleProduct } from "../Product/ProductActions";
+import { getSingleProduct } from "../context/Product/ProductActions";
 
 export default function Navbar({ onSearch }) {
   const { isAuthenticated, user, logout } = useAuth();
@@ -31,7 +31,7 @@ export default function Navbar({ onSearch }) {
 
   // Drop Down Categories
   const bestsellersCategories = ["All Products"];
-  const clothesCategories = ["MEN'S CLOTHING", "WOMEN'S CLOTHING"];
+  const clothesCategories = ["MENS", "WOMENS"];
   const accessoriesCategories = ["JEWELERY"];
   const electronicsCategories = ["ELECTRONICS"];
 
@@ -68,6 +68,7 @@ export default function Navbar({ onSearch }) {
   return (
     <>
       <header>
+        {/* Jumbotron 1 */}
         <div className="p-3 text-center bg-white border-bottom">
           <div id="nav-top">
             <div className="row">
@@ -193,9 +194,9 @@ export default function Navbar({ onSearch }) {
             </div>
           </div>
         </div>
-        {/* Jumbotron */}
+        {/* Jumbotron 1*/}
 
-        {/* Navbar */}
+        {/* Navbar1  */}
         <nav className="navbar navbar-expand-lg navbar-light bg-white">
           <div className="container">
             {/* Mobile Navigation Button */}
@@ -342,7 +343,7 @@ export default function Navbar({ onSearch }) {
           </div>
           {/* Container wrapper */}
         </nav>
-        {/* Navbar */}
+        {/* Navbar1 */}
         {/* Jumbotron */}
         <div className="p-5 text-center bg-light">
           <div className="navbar-category mb-0 h3">{currentCategory}</div>

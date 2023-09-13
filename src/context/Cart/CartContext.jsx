@@ -27,8 +27,15 @@ export const CartProvider = ({ children }) => {
   }, []);
 
   const addToCart = (product) => {
-    dispatch({ type: "ADD_TO_CART", product });
-    setLocalStorageCart([...cart, product]);
+    const existingProduct = cart.find((p) => p.id === product.id);
+
+    if (existingProduct) {
+      // If the product is already in the cart, increment its quantity
+      updateCartProduct(existingProduct.id, existingProduct.quantity + 1);
+    } else {
+      // If the product is not in the cart, add it with a quantity of 1
+      dispatch({ type: "ADD_TO_CART", product });
+    }
   };
 
   const updateCartProduct = (productId, newQuantity) => {

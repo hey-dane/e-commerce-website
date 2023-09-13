@@ -6,11 +6,14 @@ import React, {
   useEffect,
 } from "react";
 import { Link } from "react-router-dom";
-import { useCart } from "../Cart/CartContext";
+import { useCart } from "../context/Cart/CartContext";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { getLocalStorageCart, setLocalStorageCart } from "../Cart/CartActions";
+import {
+  getLocalStorageCart,
+  setLocalStorageCart,
+} from "../context/Cart/CartActions";
 
 const Cart = () => {
   const {
@@ -177,6 +180,7 @@ const Cart = () => {
                     <div className="mt-3">
                       <button
                         className="btn btn-dark btn-lg btn-block"
+                        disabled={cart.length === 0}
                         onClick={() => {
                           setOrderSubmitted(true);
                           checkout();

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import IndexCard from "../components/IndexCard"; // Import the IndexCard component
 
 export default function Categories() {
   const { categoryName } = useParams();
@@ -25,7 +26,7 @@ export default function Categories() {
             endpoint = "electronics";
             break;
           default:
-            endpoint = ""; // Handle the "All Products" category or other cases
+            endpoint = "";
         }
 
         if (endpoint) {
@@ -45,14 +46,11 @@ export default function Categories() {
 
   return (
     <div>
-      {products.map((product) => (
-        <li key={product.id}>
-          <h2>
-            <Link to={`/products/${product.id}`}>{product.title}</Link>
-          </h2>
-          <img src={product.image} alt={product.title} />
-        </li>
-      ))}
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
+        {products.map((product) => (
+          <IndexCard key={product.id} product={product} />
+        ))}
+      </div>
     </div>
   );
 }

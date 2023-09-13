@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import { AuthProvider } from "./Auth/AuthContext";
-import { ProductProvider } from "./Product/ProductContext";
-import { SearchProvider } from "./components/SearchContext";
-import { CartProvider } from "./Cart/CartContext";
+import { AuthProvider } from "./context/Auth/AuthContext";
+import { ProductProvider } from "./context/Product/ProductContext";
+import { SearchProvider } from "./Search/SearchContext";
+import { CartProvider } from "./context/Cart/CartContext";
 import App from "./App.jsx";
 import "./index.css";
 

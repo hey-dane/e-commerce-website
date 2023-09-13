@@ -33,10 +33,10 @@ export const AuthProvider = ({ children }) => {
     // Load cart items from local storage
     const storedCartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
     setUser({
-      ...user, // your existing user data
+      ...user,
       cartItems: storedCartItems,
     });
-  }, []); // Empty dependency array to ensure this code runs only once when the component mounts
+  }, []);
 
   const initial = {
     user,

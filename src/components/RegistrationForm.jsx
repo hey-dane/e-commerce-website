@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../Auth/AuthActions"; // Assuming this import is correct
+import { registerUser } from "../context/Auth/AuthActions"; // Assuming this import is correct
 
 export default function RegistrationForm() {
   const [formData, setFormData] = useState({

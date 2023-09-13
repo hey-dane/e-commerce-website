@@ -1,5 +1,3 @@
-// product
-
 const API_BASE_URL = "https://fakestoreapi.com";
 
 export const getAllProducts = async () => {
@@ -8,7 +6,7 @@ export const getAllProducts = async () => {
     return await res.json();
   } catch (error) {
     console.error("Error fetching all products:", error);
-    throw error; // Rethrow the error to handle it in the component
+    throw error;
   }
 };
 
@@ -19,7 +17,7 @@ export const getSingleProduct = async (id) => {
 
     if (!rawResponse) {
       console.warn(`No data returned for product ID ${id}`);
-      return null; // or throw an error or handle it in any other way you see fit
+      return null;
     }
 
     if (!response.ok) {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { getSingleProduct } from "../Product/ProductActions";
+import { getSingleProduct } from "../context/Product/ProductActions";
 import { useParams, useNavigate } from "react-router-dom";
-import { useCart } from "../Cart/CartContext";
+import { useCart } from "../context/Cart/CartContext";
 
 export default function SingleProductView() {
   const [product, setProduct] = useState({});
@@ -28,10 +28,6 @@ export default function SingleProductView() {
     addToCart(product);
     navigate("/cart");
   };
-
-  if (!product) {
-    return <div>Loading product...</div>;
-  }
 
   return (
     <div key={product.id}>

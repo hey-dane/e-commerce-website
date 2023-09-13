@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useProduct } from "../Product/ProductContext";
-import { useSearch } from "../components/SearchContext";
+import { useProduct } from "../context/Product/ProductContext";
+import { useSearch } from "../Search/SearchContext";
 import IndexCard from "../components/IndexCard";
 
 export default function AllProducts() {
