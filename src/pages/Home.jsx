@@ -1,14 +1,39 @@
+import React from "react";
+import Carousel from "react-bootstrap/Carousel";
+
 export default function Home() {
-  //pass isLoggedIn or similar prop to Home function to
   return (
-    <div id="main" className="home">
-      <h1>Home Page</h1>
-      <h2>Products & things.</h2>
-      {/* {isLoggedIn ? (
-        <h2>You're logged in, start buying Stranger's Things today!</h2>
-      ) : (
-        <h2>Login or register to start buying Stranger's Things today!</h2>
-      )} */}
-    </div>
+    <Carousel controls={true}>
+      <Carousel.Item>
+        <div className="carousel-content">
+          <img
+            className="carousel-image"
+            src="./src/images/jennifer-marquez-QFptmSDb6f8-unsplashb.jpg"
+            alt="First slide"
+          />
+          <div className="carousel-text">
+            <h3>
+              BUY ONE,
+              <p>GET ONE</p>
+            </h3>
+            <p>50% OFF! FULL PRICED SKIRTS.</p>
+          </div>
+        </div>
+      </Carousel.Item>
+
+      <Carousel.Item>
+        <div className="carousel-content">
+          <img
+            className="carousel-image"
+            src="./src/images/behrouz-sasani-6OGml3UomZw-unsplash.jpg"
+            alt="Second slide"
+          />
+          <div className="carousel-text">
+            <h3>Second Slide</h3>
+            <p>This is the second slide of the carousel with content below.</p>
+          </div>
+        </div>
+      </Carousel.Item>
+    </Carousel>
   );
 }

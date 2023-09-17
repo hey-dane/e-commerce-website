@@ -18,13 +18,70 @@ li {
   list-style: none;
 }
 
-/* CSS styles */
-@media (min-width: 992px) {
-  #navbarNav {
-    display: flex !important;
+/* General styles */
+.carousel-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.carousel-image {
+  z-index: 1;
+  width: 100%;
+  max-width: 600px;
+}
+
+.carousel-text {
+  z-index: 1;
+  display: block;
+  color: #000;
+  text-align: center;
+}
+
+/* Styles for laptop and larger screens */
+@media screen and (min-width: 1024px) {
+  .carousel-content {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 30vw;
+    z-index: 1;
   }
 
-  .navbar-toggler {
-    display: none;
+  .carousel-text {
+    width: 70vw;
+    height: 30vw;
+    z-index: 1;
+  }
+
+  .carousel-image {
+    width: 40vw; /* Adjust to your desired width */
+    margin-top: 200px; /* Move the image down */
+  }
+}
+
+.carousel-item:nth-child(1) .carousel-text {
+  background-color: #c4a1a9;
+}
+
+.carousel-item:nth-child(2) .carousel-text {
+  background-color: #ceb382;
+}
+
+/* Styles specific to tablets and mobile large */
+@media screen and (max-width: 1023px) {
+  .carousel-text,
+  .carousel-image {
+    width: 100%; /* Adjusted width to 100% */
+  }
+}
+
+/* Styles specific to tablets */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .carousel-text {
+    width: 70%; /* Set this to the width percentage you want for the image */
+  }
+  .carousel-image {
+    width: 70%; /* Ensuring the image has the same width */
   }
 }

@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/Auth/AuthContext";
+import RegistrationForm from "../components/RegistrationForm";
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
+  const [showRegistrationForm, setShowRegistrationForm] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -24,7 +26,6 @@ export default function LoginForm() {
     setErrorMessage("");
 
     try {
-      // Call the login function from AuthContext to authenticate the user
       await login(formData.username, formData.password);
       navigate("/");
     } catch (error) {
@@ -33,8 +34,16 @@ export default function LoginForm() {
     }
   };
 
+  if (showRegistrationForm) {
+    return <RegistrationForm />;
+  }
+
   return (
-    <section className="vh-100" style={{ backgroundColor: "#9A616D" }}>
+    <section
+      className="vh-100"
+      style={{ backgroundColor: "#9A616D" }}
+      id="loginpage"
+    >
       <div className="container-fluid h-100">
         <div className="row justify-content-center align-items-center h-100">
           <div className="col-md-10 col-lg-8">
@@ -45,14 +54,18 @@ export default function LoginForm() {
                     src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img1.webp"
                     alt="login form"
                     className="img-fluid"
+                    style={{
+                      borderTopLeftRadius: "1rem",
+                      borderBottomLeftRadius: "1rem",
+                    }}
                   />
                 </div>
+
                 <div className="col-md-6">
                   <div className="card-body p-4 p-lg-5 text-black">
                     <form onSubmit={handleLoginSubmit}>
                       <div className="d-flex align-items-center mb-3 pb-1">
                         <span className="h1 fw-bold mb-0">
-                          {" "}
                           <img
                             src="https://placehold.co/200x100/FFF/9A616D/?text=shop."
                             alt="Logo"
@@ -102,13 +115,22 @@ export default function LoginForm() {
                       <p id="userNotFoundMessage" style={{ color: "red" }}>
                         {errorMessage}
                       </p>
-
                       <a className="small text-muted" href="#!">
                         Forgot password?
                       </a>
-                      <p className="mb-5 pb-lg-2" style={{ color: "#393f81" }}>
+                      <p
+                        className="mb-5 pb-lg-2"
+                        style={{ color: "#9A616D", fontWeight: "600" }}
+                      >
                         Don't have an account?{" "}
-                        <a href="#!" style={{ color: "#393f81" }}>
+                        <a
+                          href="#!"
+                          style={{ color: "#e540df" }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setShowRegistrationForm(true);
+                          }}
+                        >
                           Register here.
                         </a>
                       </p>

@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useProduct } from "../context/Product/ProductContext";
-import { useSearch } from "../Search/SearchContext";
+import { useSearch } from "../context/Search/SearchContext";
 import IndexCard from "../components/IndexCard";
 
 export default function AllProducts() {
   const { products, dispatch, getAllProducts } = useProduct();
-  const { searchQuery } = useSearch();
-  const [filteredProducts, setFilteredProducts] = useState([]);
+  const { searchQuery, executeSearch, queryResults } = useSearch(); // Use executeSearch and queryResults from the context
 
   useEffect(() => {
     async function fetchProducts() {
@@ -20,31 +19,13 @@ export default function AllProducts() {
     fetchProducts();
   }, [dispatch]);
 
-  useEffect(() => {
-    if (searchQuery) {
-      filterProducts(searchQuery);
-    } else {
-      setFilteredProducts(products);
-    }
-  }, [searchQuery, products]);
-
-  const filterProducts = (query) => {
-    const filtered = products.filter(
-      (product) =>
-        product.title.toLowerCase().includes(query.toLowerCase()) ||
-        product.description.toLowerCase().includes(query.toLowerCase())
-    );
-    setFilteredProducts(filtered);
-  };
-
   return (
     <div>
       <h1>All Products</h1>
       <div style={{ display: "flex", flexWrap: "wrap" }}>
-        {filteredProducts &&
-          filteredProducts.map((product) => (
-            <IndexCard key={product.id} product={product} />
-          ))}
+        {products.map((product) => (
+          <IndexCard key={product.id} product={product} />
+        ))}
       </div>
     </div>
   );
