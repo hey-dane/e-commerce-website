@@ -16,7 +16,7 @@ export default function IndexCard({ product }) {
               src={product.image}
               alt={product.title}
               className="img-fluid rounded"
-              style={{ maxWidth: "100%", height: "auto" }}
+              style={{ maxWidth: "60%", height: "auto" }}
             />
           </div>
           <div className="card-body d-flex flex-column justify-content-end">

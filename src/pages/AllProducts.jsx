@@ -21,7 +21,6 @@ export default function AllProducts() {
 
   return (
     <div>
-      <h1>All Products</h1>
       <div style={{ display: "flex", flexWrap: "wrap" }}>
         {products.map((product) => (
           <IndexCard key={product.id} product={product} />

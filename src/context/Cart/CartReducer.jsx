@@ -1,6 +1,4 @@
 const cartReducer = (state, action) => {
-  console.log("Action received in reducer:", action);
-
   switch (action.type) {
     case "ADD_TO_CART":
       const existingProductIndex = state.findIndex(
@@ -11,12 +9,10 @@ const cartReducer = (state, action) => {
         // Product already exists in cart, update its quantity
         const newState = [...state];
         newState[existingProductIndex].quantity += 1;
-        console.log("Updated state after adding product:", newState);
         return newState;
       } else {
         // Product is not in cart, add it with a quantity of 1
         const newState = [...state, { ...action.product, quantity: 1 }];
-        console.log("New state after adding product:", newState);
         return newState;
       }
 
