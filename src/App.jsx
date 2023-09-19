@@ -1,3 +1,4 @@
+import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
@@ -8,7 +9,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Login from "./pages/Login";
 import SingleProductView from "./pages/SingleProductView";
 import Categories from "./components/Categories";
-import Cart from "./pages/Cart";
+import Cart from "./pages/ShoppingCart";
 import SearchResult from "./pages/SearchResults";
 import { useSearch } from "./context/Search/SearchContext";
 

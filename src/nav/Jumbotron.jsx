@@ -24,14 +24,49 @@ export default function Jumbotron() {
       setCurrentCategory("Login");
     } else if (pathname === "/search") {
       setCurrentCategory("Search Results");
+    } else if (pathname === "/") {
+      setCurrentCategory("Home");
+    } else if (pathname === "/allproducts") {
+      setCurrentCategory("All Products");
     } else {
       setCurrentCategory("");
     }
   }, [location]);
 
-  return (
-    <div className="p-5 text-center bg-light">
-      <div className="navbar-category mb-0 h3">{currentCategory}</div>
-    </div>
-  );
+  // Define different JSX for the home page and other pages
+  const isHomePage = location.pathname === "/";
+  let jumbotronContent;
+
+  if (isHomePage) {
+    jumbotronContent = (
+      <div className="p-2 text-center bg-light">
+        <div className="header bg-light" id="jumbotron-container">
+          <div className="animated-text slide-from-top">
+            <h7>WOMENS SHIRTS</h7>
+            <p>
+              <h7>Starting at $7.95!</h7>
+            </p>
+          </div>
+          <div className="animated-text ">
+            <h5>ALL ACCESSORIES 50% OFF</h5>
+          </div>
+          <div className="animated-text slide-from-top">
+            <h7>NEW SELECTION OF ELECTRONICS</h7>
+            <p>
+              <h7>TV, memory cards and more!</h7>
+            </p>
+            <p></p>
+          </div>
+        </div>
+      </div>
+    );
+  } else {
+    jumbotronContent = (
+      <div className="p-4 text-center bg-light">
+        <div className="navbar-category mb-0 h3">{currentCategory}</div>
+      </div>
+    );
+  }
+
+  return jumbotronContent;
 }

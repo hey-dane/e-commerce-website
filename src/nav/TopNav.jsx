@@ -19,22 +19,15 @@ export default function TopNav({ onSearch }) {
   const { cartQuantity } = useContext(CartContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log("Query Results:", queryResults);
-  }, [queryResults]);
+  useEffect(() => {}, [queryResults]);
 
   const handleInputChange = (e) => {
-    console.log("Input value changed:", e.target.value); // Add this line
-
     setQuery(e.target.value);
   };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    console.log("Search submitted with query:", query);
-
     executeSearch(query);
-    console.log("Navigating to /search");
 
     navigate(`/search`);
   };
