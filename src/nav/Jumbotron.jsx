@@ -40,7 +40,7 @@ export default function Jumbotron() {
   if (isHomePage) {
     jumbotronContent = (
       <div className="p-2 text-center bg-light">
-        <div className="header bg-dark text-white" id="jumbotron-container">
+        <div className="header bg-light" id="jumbotron-container">
           <div className="animated-text slide-from-top">
             <h7>WOMENS SHIRTS</h7>
             <p>
