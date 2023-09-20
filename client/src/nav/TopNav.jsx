@@ -9,7 +9,6 @@ import {
   faSearch,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import SearchResult from "../pages/SearchResults";
 
 export default function TopNav({ onSearch }) {
   const { isAuthenticated, user, logout } = useAuth();

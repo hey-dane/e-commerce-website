@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Kanit:wght@100;300;500&family=Lato:ital,wght@0,100;;0,400;0,700;1,100&family=Rampart+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kanit:wght@100;300;500&family=Lato:ital,wght@0,100;0,400;0,700;1,100&family=Rampart+One&display=swap");
 
 :root {
   --font-kanit: "Kanit", sans-serif;
@@ -13,13 +13,11 @@
 }
 
 h2 {
-  font-family: var(--font-lato);
+  font-family: var(--font-kanit);
 }
 
-h7 {
-  font-size: 16px;
-  font-family: var(--font-lato);
-  font-weight: 400;
+h4 {
+  font-family: var(--font-kanit);
 }
 
 h6 {
@@ -28,13 +26,7 @@ h6 {
   font-family: var(--font-kanit);
 }
 
-h7 {
-  font-size: 12px;
-  font-family: var(--font-lato);
-  font-weight: 400;
-}
-
-h8 {
+#salestext {
   font-size: 11px;
   font-family: var(--font-lato);
   font-weight: 400;

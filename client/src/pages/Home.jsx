@@ -11,13 +11,7 @@ export default function Home() {
             src="./src/images/jennifer-marquez-QFptmSDb6f8-unsplashb.jpg"
             alt="First slide"
           />
-          <div className="carousel-text">
-            <h3>
-              BUY ONE,
-              <p>GET ONE</p>
-            </h3>
-            <p>50% OFF! FULL PRICED SKIRTS.</p>
-          </div>
+          <div className="carousel-text"></div>
         </div>
       </Carousel.Item>
 

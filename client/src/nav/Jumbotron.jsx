@@ -41,21 +41,16 @@ export default function Jumbotron() {
     jumbotronContent = (
       <div className="p-2 text-center bg-light">
         <div className="header bg-light" id="jumbotron-container">
-          <div className="animated-text slide-from-top">
-            <h7>WOMENS SHIRTS</h7>
-            <p>
-              <h7>Starting at $7.95!</h7>
-            </p>
+          <div className="animated-text slide-from-top" id="salestext">
+            WOMENS SHIRTS
+            <p>Starting at $7.95!</p>
           </div>
           <div className="animated-text ">
             <h5>ALL ACCESSORIES 50% OFF</h5>
           </div>
-          <div className="animated-text slide-from-top">
-            <h7>NEW SELECTION OF ELECTRONICS</h7>
-            <p>
-              <h7>TV, memory cards and more!</h7>
-            </p>
-            <p></p>
+          <div className="animated-text slide-from-top" id="salestext">
+            NEW SELECTION OF ELECTRONICS
+            <p>TV, memory cards and more!</p>
           </div>
         </div>
       </div>

@@ -1,17 +1,22 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+import { useSearch } from "./context/Search/SearchContext";
+
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
-import "./App.css";
 import AllProducts from "./pages/AllProducts";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Login from "./pages/Login";
 import SingleProductView from "./pages/SingleProductView";
 import Categories from "./components/Categories";
 import Cart from "./pages/ShoppingCart";
 import SearchResult from "./pages/SearchResults";
-import { useSearch } from "./context/Search/SearchContext";
+import Payment from "./components/Payment";
+import Completion from "./components/Completion";
+import OrderDetails from "./components/OrderDetails";
+
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 function App() {
   const { queryResults } = useSearch();
@@ -30,6 +35,12 @@ function App() {
           path="/search"
           element={<SearchResult queryResults={queryResults} />}
         />
+        <Route
+          path="/order-details"
+          element={<OrderDetails addressTypes={["Billing", "Shipping"]} />}
+        />
+        <Route path="/payment" element={<Payment />} />
+        <Route path="/completion" element={<Completion />} />
       </Routes>
     </>
   );
