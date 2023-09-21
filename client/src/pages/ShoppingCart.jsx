@@ -18,33 +18,29 @@ import {
 const Cart = () => {
   const {
     cart,
-    dispatch,
+    dispatch, // You should have a dispatch function from your cart context
     removeFromCart,
     emptyCart,
-    updateCartProduct,
+    // updateCartProduct: contextUpdateCartProduct, // Remove this line
     checkout,
   } = useCart();
-  const [updatedCart, setUpdatedCart] = useState([...cart]);
   const [quantityInputs, setQuantityInputs] = useState({});
   const [orderSubmitted, setOrderSubmitted] = useState(false);
 
   useEffect(() => {
     const storedCart = getLocalStorageCart();
     if (storedCart && storedCart.length > 0) {
-      dispatch({ type: "INITIALIZE_CART", cart: storedCart });
-      setUpdatedCart([...storedCart]);
+      dispatch({ type: "INITIALIZE_CART", cart: storedCart }); // Dispatch an action to initialize the cart
     }
   }, [dispatch]);
 
   useEffect(() => {
-    setLocalStorageCart(updatedCart);
-  }, [updatedCart]);
+    setLocalStorageCart(cart);
+  }, [cart]);
 
   const handleRemoveFromCart = (productId) => {
     removeFromCart(productId);
-    setUpdatedCart((prevCart) =>
-      prevCart.filter((product) => product.id !== productId)
-    );
+
     setQuantityInputs((prevInputs) => ({
       ...prevInputs,
       [productId]: undefined,
@@ -60,20 +56,23 @@ const Cart = () => {
       [productId]: newQuantity,
     }));
   };
-  const handleUpdateCart = () => {
-    const updated = updatedCart.map((product) => {
-      // If the user has updated the quantity of the product
-      if (quantityInputs[product.id]) {
-        // Update the cart context with the new quantity
-        updateCartProduct(product.id, quantityInputs[product.id]);
+
+  const handleUpdateCartProduct = () => {
+    // Create an array to hold the updated cart
+    const updatedCart = cart.map((product) => {
+      if (quantityInputs[product.id] !== undefined) {
+        return {
+          ...product,
+          quantity: quantityInputs[product.id],
+        };
       }
-      return {
-        ...product,
-        quantity: quantityInputs[product.id] || product.quantity,
-      };
+      return product;
     });
 
-    setUpdatedCart(updated);
+    // Update the cart context with the new cart
+    dispatch({ type: "UPDATE_CART", cart: updatedCart });
+
+    // Clear the quantityInputs state
     setQuantityInputs({});
   };
 
@@ -100,7 +99,7 @@ const Cart = () => {
                   <div>Your cart is empty.</div>
                 ) : (
                   <ul className="list-group">
-                    {updatedCart.map((product, index) => (
+                    {cart.map((product, index) => (
                       <li
                         key={product.id || index}
                         className="list-group-item d-flex justify-content-between align-items-center"
@@ -150,7 +149,7 @@ const Cart = () => {
                 </div>
                 <div className="mt-3 float-end">
                   <button
-                    onClick={handleUpdateCart}
+                    onClick={handleUpdateCartProduct}
                     className="btn btn-dark btn-lg btn-block me-2"
                   >
                     Update Cart

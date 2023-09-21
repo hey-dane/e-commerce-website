@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import { getLocalStorageCart, setLocalStorageCart } from "./CartActions";
-import cartReducer from "./cartReducer";
+import { cartReducer } from "./cartReducer";
 
 export const CartContext = createContext();
 
@@ -14,17 +14,31 @@ export const useCart = () => {
   return useContext(CartContext);
 };
 
+const updateCartQuantity = (dispatch, cart) => {
+  const totalQuantity = cart.reduce(
+    (acc, product) => acc + product.quantity,
+    0
+  );
+  dispatch({ type: "UPDATE_CART_QUANTITY", cartQuantity: totalQuantity });
+};
+
 export const CartProvider = ({ children }) => {
   const [cart, dispatch] = useReducer(cartReducer, []);
-  const [cartQuantity, setCartQuantity] = useState(0); // Add cartQuantity state
+  const [cartQuantity, setCartQuantity] = useState(0);
+  const [paymentStatus, setPaymentStatus] = useState(null); // New paymentStatus state
 
   useEffect(() => {
-    // Load cart items from local storage
-    const storedCart = getLocalStorageCart();
-    if (storedCart && storedCart.length > 0) {
-      dispatch({ type: "INITIALIZE_CART", cart: storedCart });
+    if (paymentStatus === "success") {
+      // Do something when payment is successful
+      const storedCart = getLocalStorageCart();
+      if (storedCart && storedCart.length > 0) {
+        dispatch({ type: "INITIALIZE_CART", cart: storedCart });
+      }
+
+      // Reset paymentStatus to null after handling success
+      setPaymentStatus(null);
     }
-  }, []);
+  }, [paymentStatus]);
 
   const addToCart = (product) => {
     const existingProduct = cart.find((p) => p.id === product.id);
@@ -47,8 +61,12 @@ export const CartProvider = ({ children }) => {
   };
 
   const checkout = () => {
+    console.log("Before emptying the cart:", cart);
     dispatch({ type: "EMPTY_CART" });
+    console.log("After emptying the cart:", cart);
     setLocalStorageCart([]); // Clears cart data from local storage
+    setCartQuantity(0); // Reset cart quantity
+    setPaymentStatus("success"); // Set payment status to "success"
   };
 
   useEffect(() => {
@@ -69,6 +87,8 @@ export const CartProvider = ({ children }) => {
       value={{
         cart,
         cartQuantity,
+        paymentStatus, // Include payment status in the context
+
         dispatch,
         addToCart,
         updateCartProduct,

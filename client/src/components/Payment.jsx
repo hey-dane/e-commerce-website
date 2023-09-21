@@ -21,11 +21,7 @@ export default function Payment() {
   useEffect(() => {
     fetch("http://localhost:8000/create-payment-intent", {
       method: "POST",
-      body: JSON.stringify({
-        amount: 1999, // Replace with the actual amount to charge
-        currency: "USD", // Replace with the desired currency
-        // Add other payment details as needed
-      }),
+      body: JSON.stringify({}),
     })
       .then(async (result) => {
         if (!result.ok) {
@@ -48,7 +44,7 @@ export default function Payment() {
       {error && <div>Error: {error}</div>} {/* Display error message */}
       {clientSecret && stripePromise && (
         <Elements stripe={stripePromise} options={{ clientSecret }}>
-          <CheckoutForm />
+          <CheckoutForm clientSecret={clientSecret} />
         </Elements>
       )}
     </>

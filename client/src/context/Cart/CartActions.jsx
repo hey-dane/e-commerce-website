@@ -1,4 +1,4 @@
-const CART_STORAGE_KEY = "cart"; // Define the cart storage key here
+const CART_STORAGE_KEY = "cart";
 
 export const getLocalStorageCart = () => {
   const storedCart = localStorage.getItem("cart");

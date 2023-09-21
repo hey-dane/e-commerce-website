@@ -23,7 +23,7 @@ export const registerUser = async (userData) => {
   existingUsers.push(newUser);
   localStorage.setItem("users", JSON.stringify(existingUsers));
 
-  localStorage.setItem("user", JSON.stringify(newUser));
+  "user", JSON.stringify(newUser);
 
   if (isPageReloaded()) {
     clearUserDataFromLocalStorage();
