@@ -1,12 +1,22 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../context/Auth/AuthActions"; // Assuming this import is correct
+import { registerUser } from "../context/Auth/AuthActions";
+import InputMask from "react-input-mask";
 
 export default function RegistrationForm() {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
-    confirmPassword: "",
+    email: "",
+    name: { firstname: "", lastname: "" },
+    address: {
+      city: "",
+      street: "",
+      number: "",
+      zipcode: "",
+      geolocation: { lat: "", long: "" },
+    },
+    phone: "",
   });
 
   const navigate = useNavigate();
@@ -20,59 +30,95 @@ export default function RegistrationForm() {
   const handleRegistrationSubmit = async (e) => {
     e.preventDefault();
 
-    if (
-      !formData.username.trim() ||
-      !formData.password.trim() ||
-      !formData.confirmPassword.trim()
-    ) {
-      setErrorMessage("Please fill in all fields.");
+    const { username, password, email, name, address, confirmPassword } =
+      formData;
+
+    const isEmpty = (field) => !field.trim();
+    const isInvalidPassword = password !== confirmPassword;
+
+    if (isEmpty(username) || isEmpty(password) || isEmpty(email)) {
+      setErrorMessage("Please fill in all required fields.");
       return;
     }
 
-    if (formData.password !== formData.confirmPassword) {
+    if (isEmpty(name.firstname) || isEmpty(name.lastname)) {
+      setErrorMessage("Please fill in both first and last name.");
+      return;
+    }
+
+    const { city, street, zipcode } = address;
+
+    if (isEmpty(city) || isEmpty(street) || isEmpty(zipcode)) {
+      setErrorMessage(
+        "Please fill in the complete address excluding unit/number."
+      );
+      return;
+    }
+
+    if (isInvalidPassword) {
       setErrorMessage("Passwords do not match.");
       return;
     }
 
     setErrorMessage("");
-
     try {
-      const response = await registerUser({
-        username: formData.username,
-        password: formData.password,
-      });
-
-      console.log("Registration Response:", response);
+      const response = await registerUser(formData);
 
       if (response && response.id) {
-        // Registration successful
-        navigate("/login");
+        navigate(`/profile/`);
       } else {
-        // Handle registration error here
         setErrorMessage("Registration failed. Please try again.");
       }
     } catch (error) {
-      console.error("An error occurred during registration:", error);
       setErrorMessage(
         "An error occurred during registration. Please try again."
       );
     }
   };
 
+  const handleNestedInputChange = (e, parent) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => {
+      return {
+        ...prevState,
+        [parent]: {
+          ...prevState[parent],
+          [name]: value,
+        },
+      };
+    });
+  };
+
   return (
-    <section className="vh-100" style={{ backgroundColor: "#9A616D" }}>
+    <section
+      className="vh-auto"
+      style={{ backgroundColor: "var(--color-secondarybackground)" }}
+    >
       <div className="container-fluid h-100">
         <div className="row justify-content-center align-items-center h-100">
           <div className="col-md-10 col-lg-8">
-            <div className="card" style={{ borderRadius: "1rem" }}>
-              <div className="row g-0">
+            <div
+              className="card mt-5 mb-5"
+              style={{
+                borderRadius: "1rem",
+                borderColor: "var(--color-border)",
+              }}
+            >
+              <div className="column g-0">
                 <div className="col-md-6 d-none d-md-block">
-                  {/* Your image */}
+                  <img
+                    src="https://placehold.co/200x100/FFF/3c1642/?text=shop."
+                    alt="Logo"
+                    style={{ borderRadius: "1rem" }}
+                  />
                 </div>
-                <div className="col-md-6">
+                <div className="col">
                   <div className="card-body p-4 p-lg-5 text-black">
                     <form onSubmit={handleRegistrationSubmit}>
-                      <div className="form-outline mb-4">
+                      <div
+                        className="form-outline mb-2"
+                        style={{ maxWidth: "300px", margin: "0 auto" }}
+                      >
                         <label htmlFor="username" className="form-label">
                           Username
                         </label>
@@ -85,7 +131,10 @@ export default function RegistrationForm() {
                           onChange={handleInputChange}
                         />
                       </div>
-                      <div className="form-outline mb-4">
+                      <div
+                        className="form-outline mb-2"
+                        style={{ maxWidth: "300px", margin: "0 auto" }}
+                      >
                         <label htmlFor="password" className="form-label">
                           Password
                         </label>
@@ -98,7 +147,10 @@ export default function RegistrationForm() {
                           onChange={handleInputChange}
                         />
                       </div>
-                      <div className="form-outline mb-4">
+                      <div
+                        className="form-outline mb-4"
+                        style={{ maxWidth: "300px", margin: "0 auto" }}
+                      >
                         <label htmlFor="confirmPassword" className="form-label">
                           Confirm Password
                         </label>
@@ -111,9 +163,164 @@ export default function RegistrationForm() {
                           onChange={handleInputChange}
                         />
                       </div>
+                      <hr
+                        className="my-4"
+                        style={{ borderColor: "#3c1642", borderWidth: "2px" }}
+                      />
+
+                      <div className="form-outline mb-2">
+                        <label htmlFor="email" className="form-label">
+                          Email
+                        </label>
+                        <input
+                          type="email"
+                          className="form-control"
+                          id="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                      <div className="row">
+                        <div className="col-md-6 mb-2">
+                          <label htmlFor="firstname" className="form-label">
+                            First Name
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="firstname"
+                            name="firstname"
+                            value={formData.name.firstname}
+                            onChange={(e) => handleNestedInputChange(e, "name")}
+                          />
+                        </div>
+
+                        <div className="col-md-6 mb-4">
+                          <label htmlFor="lastname" className="form-label">
+                            Last Name
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="lastname"
+                            name="lastname"
+                            value={formData.name.lastname}
+                            onChange={(e) => handleNestedInputChange(e, "name")}
+                          />
+                        </div>
+                      </div>
+                      <div className="form-outline mb-2">
+                        <label htmlFor="city" className="form-label">
+                          City
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="city"
+                          name="city"
+                          value={formData.address.city}
+                          onChange={(e) =>
+                            handleNestedInputChange(e, "address")
+                          }
+                        />
+                      </div>
+                      <div className="form-outline mb-2">
+                        <label htmlFor="street" className="form-label">
+                          Street Address
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="street"
+                          name="street"
+                          value={formData.address.street}
+                          onChange={(e) =>
+                            handleNestedInputChange(e, "address")
+                          }
+                        />
+                      </div>
+                      <div className="row mb-4">
+                        <div className="col-md-4">
+                          <div className="form-outline">
+                            <label htmlFor="number" className="form-label">
+                              Unit
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="number"
+                              name="number"
+                              value={formData.address.number}
+                              onChange={(e) =>
+                                handleNestedInputChange(e, "address")
+                              }
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-md-4">
+                          <div
+                            className="form-outline"
+                            style={{
+                              maxWidth: "80px",
+                              marginLeft: "20px",
+                              marginRight: "auto",
+                            }}
+                          >
+                            <label htmlFor="zipcode" className="form-label">
+                              Zipcode
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="zipcode"
+                              name="zipcode"
+                              value={formData.address.zipcode}
+                              onChange={(e) => {
+                                if (/^\d{0,5}$/.test(e.target.value)) {
+                                  handleNestedInputChange(e, "address");
+                                }
+                              }}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="col-md-4">
+                          <div
+                            className="form-outline"
+                            style={{ maxWidth: "200px", marginLeft: "auto" }}
+                          >
+                            <label htmlFor="phone" className="form-label">
+                              Phone
+                            </label>
+                            <InputMask
+                              placeholder="(123) 456-7890"
+                              mask="(999) 999-9999"
+                              maskChar={null}
+                              value={formData.phone}
+                              onChange={(e) => {
+                                const val = e.target.value.replace(/\D/g, "");
+                                if (val.length <= 10) handleInputChange(e);
+                              }}
+                            >
+                              {(inputProps) => (
+                                <input
+                                  {...inputProps}
+                                  type="text"
+                                  className="form-control"
+                                  id="phone"
+                                  name="phone"
+                                />
+                              )}
+                            </InputMask>
+                          </div>
+                        </div>
+                      </div>
+
                       <div className="pt-1 mb-4">
                         <button
-                          className="btn btn-dark btn-lg btn-block"
+                          className="btn btn-lg btn-block custom-button "
                           type="submit"
                         >
                           Register

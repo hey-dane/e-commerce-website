@@ -34,15 +34,12 @@ app.get("/config", (req, res) => {
 
 app.post("/create-payment-intent", async (req, res) => {
   try {
-    console.log("Request body:", req.body);
-
     const paymentIntent = await stripe.paymentIntents.create({
       currency: "USD",
       amount: 1999,
     });
 
     // Log the Stripe API response
-    console.log("Stripe API Response:", paymentIntent);
 
     res.send({
       clientSecret: paymentIntent.client_secret,

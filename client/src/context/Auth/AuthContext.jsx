@@ -5,37 +5,37 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import authReducer from "./AuthReducer";
 import {
   loginUser,
   registerUser,
   logoutUser,
   getLoggedInUser,
+  updateUserDataAction,
 } from "./AuthActions";
+import authReducer, { LOGIN, LOGOUT, REGISTER } from "./AuthReducer";
 import { useNavigate } from "react-router-dom";
-
-export const REGISTER = "REGISTER";
-export const LOGIN = "LOGIN";
-export const LOGOUT = "LOGOUT";
 
 const AuthContext = createContext();
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
-  const [user, setUser] = useState(getLoggedInUser());
+  const [user, setUser] = useState(() => getLoggedInUser() || {});
 
   useEffect(() => {
-    // Load cart items from local storage
-    const storedCartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-    setUser({
-      ...user,
-      cartItems: storedCartItems,
-    });
+    const loggedInUser = getLoggedInUser();
+    if (loggedInUser && loggedInUser.username) {
+      setUser(loggedInUser);
+    } else {
+      console.error(
+        "Invalid user object retrieved from storage:",
+        loggedInUser
+      );
+      // Handle the error gracefully, such as logging out the user or clearing local storage
+      // setUser({});
+    }
   }, []);
 
   const initial = {
@@ -50,7 +50,6 @@ export const AuthProvider = ({ children }) => {
       const user = await loginUser(username, password);
       localStorage.setItem("user", JSON.stringify(user));
       setUser(user);
-
       dispatch({ type: LOGIN, payload: user });
     } catch (error) {
       console.error("Login error:", error);
@@ -70,12 +69,16 @@ export const AuthProvider = ({ children }) => {
       const user = await registerUser(userData);
       localStorage.setItem("user", JSON.stringify(user));
       setUser(user);
-
       dispatch({ type: REGISTER, payload: user });
     } catch (error) {
       console.error("Registration error:", error);
       throw error;
     }
+  };
+
+  const updateUser = (updatedUser) => {
+    setUser(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
   };
 
   return (
@@ -85,6 +88,8 @@ export const AuthProvider = ({ children }) => {
         login,
         logout: userLogout,
         register,
+        updateUser,
+        dispatch,
       }}
     >
       {children}

@@ -10,7 +10,7 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
-export default function TopNav({ onSearch }) {
+export default function TopNav() {
   const { isAuthenticated, user, logout } = useAuth();
   const { searchQuery, setSearchQuery, queryResults, executeSearch } =
     useSearch();
@@ -27,21 +27,113 @@ export default function TopNav({ onSearch }) {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     executeSearch(query);
-
     navigate(`/search`);
+  };
+
+  const renderUserDropdown = () => {
+    if (isAuthenticated) {
+      return (
+        <div className="dropdown">
+          <a
+            className="text-reset dropdown-toggle d-flex align-items-center hidden-arrow"
+            href="#"
+            id="navbarDropdownMenuLink"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            aria-label="User menu"
+          >
+            <FontAwesomeIcon
+              icon={faUser}
+              size="lg"
+              style={{ color: "var(--link-color)" }}
+              aria-hidden="true"
+            />
+          </a>
+          <ul
+            className="dropdown-menu dropdown-menu-end"
+            aria-labelledby="navbarDropdownMenuLink"
+          >
+            <li>
+              <Link
+                to="/account"
+                className="dropdown-item"
+                aria-label="View my account"
+                style={{ color: "var(--nav-color)" }}
+              >
+                My Account
+              </Link>
+            </li>
+            <li>
+              <a
+                className="dropdown-item"
+                onClick={logout}
+                aria-label="Logout"
+                style={{ color: "var(--nav-color)" }}
+              >
+                Logout
+              </a>
+            </li>
+          </ul>
+        </div>
+      );
+    } else {
+      return (
+        <div className="dropdown">
+          <a
+            className="text-reset dropdown-toggle d-flex align-items-center hidden-arrow"
+            href="#"
+            id="navbarDropdownMenuLink"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            aria-label="User menu"
+          >
+            <FontAwesomeIcon
+              icon={faUser}
+              size="lg"
+              style={{ color: "var(--active-color)" }}
+              aria-hidden="true"
+            />
+          </a>
+          <ul
+            className="dropdown-menu dropdown-menu-end"
+            aria-labelledby="navbarDropdownMenuLink"
+          >
+            <li className="dropdown-item">
+              <Link
+                to="/login"
+                aria-label="Login"
+                style={{ color: "var(--nav-color)" }}
+              >
+                Login
+              </Link>
+            </li>
+          </ul>
+        </div>
+      );
+    }
   };
 
   return (
     <>
       {/* TopNav */}
-      <div className="p-3 text-center bg-white border-bottom">
+      <div
+        className="p-3 text-center"
+        style={{
+          backgroundColor: "#ffffff",
+          borderColor: "var(--color-border)",
+          color: "var(--color-text)",
+          fontFamily: "var(--font-primary)",
+        }}
+      >
         <div id="nav-top">
           <div className="row">
             {/* Left elements */}
             <div className="col-md-4 col-12 d-flex justify-content-center justify-content-md-start mb-3 mb-md-0">
               <Link to="/" aria-label="Go to homepage">
                 <img
-                  src="https://placehold.co/100x35/FFF/9A616D/?text=shop."
+                  src="https://placehold.co/100x35/FFF/3c1642/?text=shop."
                   alt="Logo"
                 />
               </Link>
@@ -71,7 +163,7 @@ export default function TopNav({ onSearch }) {
                 >
                   <FontAwesomeIcon
                     icon={faSearch}
-                    style={{ color: "#9a626d" }}
+                    style={{ color: "var(--hover-color)" }}
                     aria-hidden="true"
                   />
                 </button>
@@ -86,102 +178,27 @@ export default function TopNav({ onSearch }) {
                   to="/cart"
                   className="text-reset me-3"
                   aria-label="Go to shopping cart"
+                  style={{ color: "var(--link-color)" }}
                 >
                   <span>
                     <FontAwesomeIcon
                       icon={faShoppingCart}
-                      style={{ color: "#9a626d" }}
+                      style={{ color: "var(--link-color)" }}
                       aria-hidden="true"
                     />
                   </span>
-                  <span className="badge rounded-pill badge-notification bg-danger">
+                  <span
+                    className="badge rounded-pill badge-notification"
+                    style={{
+                      backgroundColor: "var(--color-hover)",
+                      color: "var(--navbar-color)",
+                    }}
+                  >
                     {cartQuantity}
                   </span>
                 </Link>
 
-                {/* User */}
-                {isAuthenticated && (
-                  <div className="dropdown">
-                    <a
-                      className="text-reset dropdown-toggle d-flex align-items-center hidden-arrow"
-                      href="#"
-                      id="navbarDropdownMenuLink"
-                      role="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                      aria-label="User menu"
-                    >
-                      <FontAwesomeIcon
-                        icon={faUser}
-                        size="lg"
-                        style={{ color: "#9a626d" }}
-                        aria-hidden="true"
-                      />
-                    </a>
-                    <ul
-                      className="dropdown-menu dropdown-menu-end"
-                      aria-labelledby="navbarDropdownMenuLink"
-                    >
-                      <li>
-                        <a
-                          className="dropdown-item"
-                          href="#"
-                          aria-label="View my profile"
-                        >
-                          My profile
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="dropdown-item"
-                          href="#"
-                          aria-label="Other options"
-                        >
-                          Other
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="dropdown-item"
-                          onClick={logout}
-                          aria-label="Logout"
-                        >
-                          Logout
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                )}
-                {!isAuthenticated && (
-                  <div className="dropdown">
-                    <a
-                      className="text-reset dropdown-toggle d-flex align-items-center hidden-arrow"
-                      href="#"
-                      id="navbarDropdownMenuLink"
-                      role="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                      aria-label="User menu"
-                    >
-                      <FontAwesomeIcon
-                        icon={faUser}
-                        size="lg"
-                        style={{ color: "#9a626d" }}
-                        aria-hidden="true"
-                      />
-                    </a>
-                    <ul
-                      className="dropdown-menu dropdown-menu-end"
-                      aria-labelledby="navbarDropdownMenuLink"
-                    >
-                      <li className="dropdown-item">
-                        <Link to="/login" aria-label="Login">
-                          Login
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
-                )}
+                {renderUserDropdown()}
               </div>
             </div>
             {/* Right elements */}

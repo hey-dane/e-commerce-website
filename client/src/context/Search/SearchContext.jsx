@@ -42,27 +42,20 @@ export function SearchProvider({ children }) {
         product.description.toLowerCase().includes(query.toLowerCase())
     );
 
-    console.log("Query Results:", results);
-
     setQueryResults(results);
   };
 
+  const contextValue = {
+    searchQuery,
+    setSearchQuery,
+    queryResults,
+    executeSearch,
+    resetSearch,
+  };
+
   return (
-    <SearchContext.Provider
-      value={{
-        searchQuery,
-        setSearchQuery,
-        queryResults,
-        executeSearch,
-        resetSearch,
-      }}
-    >
+    <SearchContext.Provider value={contextValue}>
       {children}
     </SearchContext.Provider>
   );
 }
-
-//added state variables for queryResults and initialResults:
-//Implement useEffect to load initial product data:
-//Add functions for search functionality:
-//Pass the new state and functions in the context value:

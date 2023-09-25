@@ -1,18 +1,10 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useReducer,
-} from "react";
+import React, { createContext, useContext, useEffect, useReducer } from "react";
 import { productsReducer } from "./ProductReducer";
 import { getAllProducts } from "./ProductActions";
 
 export const ProductContext = createContext();
 
-export const useProduct = () => {
-  return useContext(ProductContext);
-};
+export const useProduct = () => useContext(ProductContext);
 
 export const ProductProvider = ({ children }) => {
   const [products, dispatch] = useReducer(productsReducer, []);
@@ -30,8 +22,14 @@ export const ProductProvider = ({ children }) => {
     fetchProducts();
   }, []);
 
+  const contextValue = {
+    products,
+    dispatch,
+    getAllProducts,
+  };
+
   return (
-    <ProductContext.Provider value={{ products, dispatch, getAllProducts }}>
+    <ProductContext.Provider value={contextValue}>
       {children}
     </ProductContext.Provider>
   );

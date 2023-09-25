@@ -3,9 +3,8 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
 export default function OrderDetails({ addressTypes }) {
-  const navigate = useNavigate(); // Create a navigate function
+  const navigate = useNavigate();
 
-  // Define an array of address fields
   const addressFields = [
     {
       label: "First Name",
@@ -51,26 +50,32 @@ export default function OrderDetails({ addressTypes }) {
   };
 
   const handlePaymentButtonClick = () => {
-    // Add logic here to validate and process the order details
-    // Once the order details are processed, navigate to the payment component/page
-    navigate("/payment"); // Use navigate to navigate to the payment component/page
+    navigate("/payment");
   };
 
   return (
-    <section className="vh-100" style={{ backgroundColor: "#9A616D" }}>
-      <div className="container-fluid h-100">
-        <div className="row justify-content-center align-items-center h-100">
+    <section className="order-details">
+      <div className="container-fluid">
+        <div className="row justify-content-center align-items-center">
           <div className="col-md-10 col-lg-8">
             <div className="card" style={{ borderRadius: "1rem" }}>
-              <div className="card-body p-4 p-lg-5 text-black">
-                <h4 className="mb-4">WHERE TO SEND:</h4> {/* Header */}
+              <div className="card-body p-4 p-lg-5 text-var(--color-text)">
+                <h4 className="mb-4" style={{ color: "var(--color-text)" }}>
+                  WHERE TO SEND:
+                </h4>{" "}
+                {/* Header */}
                 {addressTypes.map((addressType) => (
                   <div
                     className={`mb-5 card ${addressType.toLowerCase()}-address`}
                     key={addressType}
                   >
                     <div className="card-header">
-                      <h4 className="mb-0">{addressType}</h4>
+                      <h4
+                        className="mb-0"
+                        style={{ color: "var(--color-text)" }}
+                      >
+                        {addressType}
+                      </h4>
                     </div>
                     <div className="card-body">
                       <form noValidate>
@@ -83,6 +88,7 @@ export default function OrderDetails({ addressTypes }) {
                               <label
                                 htmlFor={`${addressType}-${field.id}`}
                                 className="form-label"
+                                style={{ color: "var(--color-text)" }}
                               >
                                 {field.label}
                               </label>
@@ -103,7 +109,7 @@ export default function OrderDetails({ addressTypes }) {
                 ))}
                 <div className="text-center mt-4">
                   <button
-                    className="btn btn-dark btn-lg btn-block"
+                    className="btn btn-dark btn-lg btn-block custom-button"
                     onClick={handlePaymentButtonClick}
                   >
                     Proceed to Payment

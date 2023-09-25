@@ -3,15 +3,16 @@ import { Link } from "react-router-dom";
 
 export default function IndexCard({ product }) {
   const cardStyle = {
-    // Add your desired padding values here
     padding: "15px",
+    backgroundColor: "var(--color-background)",
+    borderColor: "var(--color-border)",
   };
+
   return (
-    <div className="col-md-4 col-sm-6 mb-4" style={cardStyle}>
+    <div className="col-md-3 col-sm-6 mb-4" style={cardStyle}>
       <Link to={`/products/${product.id}`} style={{ textDecoration: "none" }}>
         <div className="card h-100">
           <div className="d-flex justify-content-center p-3">
-            {/* Vertically center the image */}
             <img
               src={product.image}
               alt={product.title}
@@ -21,7 +22,7 @@ export default function IndexCard({ product }) {
           </div>
           <div className="card-body d-flex flex-column justify-content-end">
             <h5 className="card-title">{product.title}</h5>
-            <h6 className="card-title" style={{ color: "#df9642" }}>
+            <h6 className="card-title" style={{ color: "var(--color-accent)" }}>
               ${product.price}
             </h6>
           </div>

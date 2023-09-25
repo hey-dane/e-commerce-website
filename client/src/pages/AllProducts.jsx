@@ -5,7 +5,7 @@ import IndexCard from "../components/IndexCard";
 
 export default function AllProducts() {
   const { products, dispatch, getAllProducts } = useProduct();
-  const { searchQuery, executeSearch, queryResults } = useSearch(); // Use executeSearch and queryResults from the context
+  const { executeSearch } = useSearch();
 
   useEffect(() => {
     async function fetchProducts() {
@@ -17,15 +17,25 @@ export default function AllProducts() {
       }
     }
     fetchProducts();
-  }, [dispatch]);
+  }, [dispatch, getAllProducts]);
 
   return (
-    <div>
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
-        {products.map((product) => (
-          <IndexCard key={product.id} product={product} />
-        ))}
-      </div>
+    <div
+      style={{
+        backgroundColor: "var(--color-background)",
+        color: "var(--color-text)",
+        display: "flex",
+        flexWrap: "wrap",
+      }}
+      aria-label="All Products"
+    >
+      {products.map((product) => (
+        <IndexCard
+          key={product.id}
+          product={product}
+          aria-label={`Product: ${product.title}`}
+        />
+      ))}
     </div>
   );
 }

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
-import IndexCard from "../components/IndexCard"; // Import the IndexCard component
+import IndexCard from "../components/IndexCard";
 
 export default function Categories() {
   const { categoryName } = useParams();
@@ -45,10 +44,25 @@ export default function Categories() {
   }, [categoryName]);
 
   return (
-    <div>
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
+    <div
+      style={{
+        backgroundColor: "var(--color-background)",
+        color: "var(--color-text)",
+      }}
+    >
+      <div
+        style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
+      >
         {products.map((product) => (
-          <IndexCard key={product.id} product={product} />
+          <IndexCard
+            key={product.id}
+            product={product}
+            style={{
+              backgroundColor: "var(--color-background)",
+              color: "var(--color-text)",
+              borderColor: "var(--color-border)",
+            }}
+          />
         ))}
       </div>
     </div>

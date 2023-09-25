@@ -1,6 +1,4 @@
 export const cartReducer = (state, action) => {
-  console.log("Action dispatched:", action.type, "with payload:", action);
-
   switch (action.type) {
     case "ADD_TO_CART":
       const existingProductIndex = state.findIndex(
@@ -9,11 +7,13 @@ export const cartReducer = (state, action) => {
 
       if (existingProductIndex !== -1) {
         const newState = [...state];
-        newState[existingProductIndex].quantity += 1;
+        newState[existingProductIndex].quantity += action.product.quantity;
         return newState;
       } else {
-        const newState = [...state, { ...action.product, quantity: 1 }];
-        return newState;
+        return [
+          ...state,
+          { ...action.product, quantity: action.product.quantity },
+        ];
       }
 
     case "UPDATE_CART_PRODUCT":
@@ -27,7 +27,6 @@ export const cartReducer = (state, action) => {
       return state.filter((product) => product.id !== action.productId);
 
     case "EMPTY_CART":
-      console.log("EMPTY_CART action received. Emptying the cart.");
       return [];
 
     case "INITIALIZE_CART":
