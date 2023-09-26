@@ -1,0 +1,244 @@
+@import url("https://fonts.googleapis.com/css2?family=Kanit:wght@100;300;500&family=Lato:ital,wght@0,100;0,400;0,700;1,100&family=Poppins:wght@400;700&display=swap");
+
+:root {
+  --font-kanit: "Kanit", sans-serif;
+  --font-lato: "Lato", sans-serif;
+  --font-poppins: "Poppins", sans-serif;
+
+  --color-background: #d9dfe6;
+  --color-secondarybackground: #d7e1d7;
+  --color-offset: #f7f2e37f;
+  --color-dark: #577563;
+  --color-light: #d0e1f7;
+  --color-border: #007a99;
+  --color-bold: #07604e;
+  --color-hover: #affc41;
+  --color-hover-bg: #b2ff9e;
+  --color-active: #fc976c;
+  --color-active-bg: #007a99;
+  --color-text: #0c0f51;
+  --color-accent: #ffbf00;
+}
+body {
+  font-family: var(--font-lato);
+  background-color: var(--color-background);
+}
+
+.dropdown-item:focus,
+.dropdown-item:active,
+.dropdown-item:hover {
+  background-color: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.dropdown-item:hover {
+  color: var(--color-border) !important;
+}
+
+.dropdown-item {
+  font-family: var(--font-kanit);
+}
+
+.navbar-category {
+  font-size: 30px;
+  text-transform: uppercase;
+  font-family: var(--font-poppins);
+}
+
+h1,
+h3 {
+  font-family: var(--font-poppins);
+}
+
+h2,
+h4 {
+  font-family: var(--font-kanit);
+}
+
+h6 {
+  font-size: 16px;
+  font-style: italic;
+  font-family: var(--font-kanit);
+}
+
+li {
+  list-style: none;
+}
+
+.custom-button {
+  background-color: var(--color-background);
+  border-color: var(--color-dark);
+  color: var(--color-text);
+}
+
+.custom-button:hover {
+  background-color: var(--color-bold) !important;
+  color: var(--color-secondarybackground) !important;
+}
+
+#login-image {
+  height: 100%;
+  object-fit: cover;
+}
+
+#jumbotron-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  padding-top: 10px;
+  align-items: center;
+  overflow: hidden;
+}
+
+/*hero page header */
+.carousel-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.carousel-image {
+  z-index: 1;
+  width: 100%;
+  max-width: 600px;
+}
+
+.carousel-text {
+  z-index: 1;
+  display: block;
+  color: #000;
+  text-align: center;
+}
+
+@media screen and (min-width: 1024px) {
+  .carousel-content {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 30vw;
+    z-index: 1;
+  }
+
+  .carousel-text {
+    width: 70vw;
+    height: 30vw;
+    z-index: 1;
+  }
+
+  .carousel-image {
+    width: 40vw;
+    margin-top: 200px;
+  }
+}
+
+.carousel-item:nth-child(1) .carousel-text {
+  background-color: #d7e1d7;
+}
+
+.carousel-item:nth-child(2) .carousel-text {
+  background-color: #f7f2e37f;
+}
+
+@media screen and (max-width: 1023px) {
+  .carousel-text,
+  .carousel-image {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .carousel-item:nth-child(1) .carousel-text,
+  .carousel-item:nth-child(2) .carousel-text {
+    height: 400px;
+  }
+
+  .carousel-content {
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+  }
+
+  .carousel-image {
+    width: 100%;
+    max-width: 100%;
+    margin-top: 0;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .carousel-text {
+    width: 70%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .carousel-image {
+    width: 70%;
+  }
+}
+
+/* jumbotron home page animation */
+.animated-text {
+  display: inline-block;
+  margin: 10px;
+  animation-duration: 7s;
+  animation-fill-mode: forwards;
+  animation-delay: calc(0.5s * var(--animation-order));
+  animation-iteration-count: infinite;
+}
+
+.slide-from-top {
+  animation-name: slideTop;
+  transform: translateY(-200%);
+}
+
+.slide-from-bottom {
+  animation-name: slideBottom;
+  transform: translateY(100%);
+}
+
+@keyframes slideTop {
+  0%,
+  85%,
+  100% {
+    transform: translateY(-200%);
+  }
+  15%,
+  70% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideBottom {
+  0%,
+  85%,
+  100% {
+    transform: translateY(100%);
+  }
+  15%,
+  70% {
+    transform: translateY(0);
+  }
+}
+
+.animated-text:nth-child(1) {
+  --animation-order: 1;
+}
+
+.animated-text:nth-child(2) {
+  --animation-order: 2;
+}
+
+.animated-text:nth-child(3) {
+  --animation-order: 1;
+}
+
+@media (max-width: 768px) {
+  .animated-text.slide-from-top {
+    display: none;
+  }
+}
