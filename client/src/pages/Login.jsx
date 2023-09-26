@@ -163,7 +163,7 @@ export default function LoginForm() {
                       >
                         Don't have an account?{" "}
                         <a
-                          href="#!"
+                          href="/register"
                           style={{
                             color: "var(--color-accent)",
                             transition: "color 0.3s",

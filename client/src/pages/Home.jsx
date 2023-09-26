@@ -1,5 +1,7 @@
 import React from "react";
 import Carousel from "react-bootstrap/Carousel";
+import femaleHero from "../images/jennifer-marquez-QFptmSDb6f8-unsplashb.jpg";
+import maleHero from "../images/behrouz-sasani-6OGml3UomZw-unsplash.jpg";
 
 export default function Home() {
   return (
@@ -8,7 +10,7 @@ export default function Home() {
         <div className="carousel-content d-flex justify-content-center align-items-center">
           <img
             className="carousel-image"
-            src="./src/images/jennifer-marquez-QFptmSDb6f8-unsplashb.jpg"
+            src={femaleHero}
             alt="First slide"
             aria-label="Carousel Image 1"
           />
@@ -57,7 +59,7 @@ export default function Home() {
         <div className="carousel-content">
           <img
             className="carousel-image"
-            src="./src/images/behrouz-sasani-6OGml3UomZw-unsplash.jpg"
+            src={maleHero}
             alt="Second slide"
             aria-label="Carousel Image 2"
           />
