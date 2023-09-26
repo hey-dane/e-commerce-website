@@ -7,6 +7,7 @@
 
   --color-background: #d9dfe6;
   --color-secondarybackground: #d7e1d7;
+  --color-offset: #f7f2e37f;
   --color-dark: #577563;
   --color-light: #d0e1f7;
   --color-border: #007a99;
@@ -19,6 +20,7 @@
   --color-accent: #ffbf00;
 }
 body {
+  font-family: var(--font-lato);
   background-color: var(--color-background);
 }
 
@@ -31,19 +33,25 @@ body {
 }
 
 .dropdown-item:hover {
-  color: var(--color-accent) !important;
+  color: var(--color-border) !important;
+}
+
+.dropdown-item {
+  font-family: var(--font-kanit);
 }
 
 .navbar-category {
   font-size: 30px;
   text-transform: uppercase;
-  font-family: var(--font-kanit);
+  font-family: var(--font-poppins);
 }
 
-/* Heading fonts */
 h1,
+h3 {
+  font-family: var(--font-poppins);
+}
+
 h2,
-h3,
 h4 {
   font-family: var(--font-kanit);
 }
@@ -54,7 +62,6 @@ h6 {
   font-family: var(--font-kanit);
 }
 
-/* List style */
 li {
   list-style: none;
 }
@@ -67,7 +74,7 @@ li {
 
 .custom-button:hover {
   background-color: var(--color-bold) !important;
-  color: var(--color-hover) !important;
+  color: var(--color-secondarybackground) !important;
 }
 
 #login-image {
@@ -84,6 +91,7 @@ li {
   overflow: hidden;
 }
 
+/*hero page header */
 .carousel-content {
   display: flex;
   flex-direction: column;
@@ -125,11 +133,11 @@ li {
 }
 
 .carousel-item:nth-child(1) .carousel-text {
-  background-color: #64679f;
+  background-color: #d7e1d7;
 }
 
 .carousel-item:nth-child(2) .carousel-text {
-  background-color: #ffbf007f;
+  background-color: #f7f2e37f;
 }
 
 @media screen and (max-width: 1023px) {
@@ -173,6 +181,7 @@ li {
   }
 }
 
+/* jumbotron home page animation */
 .animated-text {
   display: inline-block;
   margin: 10px;
@@ -226,4 +235,10 @@ li {
 
 .animated-text:nth-child(3) {
   --animation-order: 1;
+}
+
+@media (max-width: 768px) {
+  .animated-text.slide-from-top {
+    display: none;
+  }
 }

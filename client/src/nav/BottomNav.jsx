@@ -26,7 +26,10 @@ const BottomNav = () => {
       {/* BottomNav */}
       <nav
         className="navbar navbar-expand-lg navbar-dark"
-        style={{ backgroundColor: "var(--color-dark)" }}
+        style={{
+          backgroundColor: "var(--color-dark)",
+          fontFamily: "var(--font-lato)",
+        }}
       >
         <div className="container">
           {/* Mobile Navigation Button */}

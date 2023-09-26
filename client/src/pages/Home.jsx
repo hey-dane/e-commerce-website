@@ -1,3 +1,6 @@
+import React from "react";
+import Carousel from "react-bootstrap/Carousel";
+
 export default function Home() {
   return (
     <Carousel controls={true} aria-label="Homepage Carousel">
@@ -16,9 +19,9 @@ export default function Home() {
                 <h4
                   className="fs-2 text-uppercase"
                   style={{
-                    fontFamily: "var(--font-lato)",
-                    color: "var(--color-accent)",
-                    fontSize: "1.5em" /* Adjust font size for mobile */,
+                    fontFamily: "var(--font-poppins)",
+                    color: "var(--color-bold)",
+                    fontSize: "1.5em",
                   }}
                 >
                   50% off all
@@ -26,9 +29,9 @@ export default function Home() {
                 <h1
                   className="display-3 text-uppercase"
                   style={{
-                    fontFamily: "var(--font-lato)",
-                    color: "var(--color-accent)",
-                    fontSize: "2.5em" /* Adjust font size for mobile */,
+                    fontFamily: "var(--font-poppins)",
+                    color: "var(--color-bold)",
+                    fontSize: "2.5em",
                   }}
                 >
                   Accessories
@@ -36,9 +39,9 @@ export default function Home() {
                 <h4
                   className="fs-2 text-uppercase"
                   style={{
-                    fontFamily: "var(--font-lato)",
-                    color: "var(--color-accent)",
-                    fontSize: "1.5em" /* Adjust font size for mobile */,
+                    fontFamily: "var(--font-poppins)",
+                    color: "var(--color-bold)",
+                    fontSize: "1.5em",
                   }}
                 >
                   first friday sale

@@ -21,10 +21,10 @@ export default function IndexCard({ product }) {
             />
           </div>
           <div className="card-body d-flex flex-column justify-content-end">
-            <h5 className="card-title">{product.title}</h5>
-            <h6 className="card-title" style={{ color: "var(--color-accent)" }}>
+            <h3 className="card-title">{product.title}</h3>
+            <h4 className="card-title" style={{ color: "var(--color-accent)" }}>
               ${product.price}
-            </h6>
+            </h4>
           </div>
         </div>
       </Link>

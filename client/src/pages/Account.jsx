@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/Auth/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
-import { updateUserDataAction } from "../context/Auth/AuthActions";
 
 export default function Account() {
   const { user, updateUser } = useAuth();
@@ -28,7 +27,9 @@ export default function Account() {
     }
   }, [user]);
 
-  if (!user || Object.keys(user).length === 0) return <div>Loading...</div>;
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   const { name = {}, email = "", username = "" } = user;
   const { firstname = "", lastname = "" } = name;

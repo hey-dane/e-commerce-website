@@ -48,7 +48,7 @@ export default function SingleProductView() {
         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
       }}
     >
-      <div className="container-fluid h-100">
+      <div className="container-fluid mt-5">
         <div className="row justify-content-center align-items-center h-100">
           <div className="col-md-10 col-lg-8">
             <div className="card">
@@ -65,7 +65,7 @@ export default function SingleProductView() {
                     />
                   </div>
                   <div className="col-md-6">
-                    <h2
+                    <h1
                       className="mb-4"
                       style={{
                         color: "var(--color-text)",
@@ -73,7 +73,7 @@ export default function SingleProductView() {
                       aria-label={`Product Title: ${product.title}`}
                     >
                       {product.title}
-                    </h2>
+                    </h1>
                     <p
                       className="mb-3"
                       style={{

@@ -1,20 +1,15 @@
 import React from "react";
 import IndexCard from "../components/IndexCard";
 import { useParams } from "react-router-dom";
+import { useSearch } from "../context/Search/SearchContext";
 
-function SearchResult({ queryResults }) {
+function SearchResult() {
   const { query } = useParams();
-
-  if (!queryResults) {
-    return <div aria-label="Loading">Loading...</div>;
-  }
+  const { queryResults } = useSearch();
 
   return (
     <div>
-      <div
-        style={{ display: "flex", flexWrap: "wrap" }}
-        aria-label="Search Results"
-      >
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
         {queryResults.map((product) => (
           <IndexCard
             key={product.id}

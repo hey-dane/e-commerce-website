@@ -61,6 +61,7 @@ export default function Categories() {
               backgroundColor: "var(--color-background)",
               color: "var(--color-text)",
               borderColor: "var(--color-border)",
+              fontFamily: "var(--font-poppins)",
             }}
           />
         ))}

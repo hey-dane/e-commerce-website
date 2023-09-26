@@ -18,16 +18,19 @@ export default function TopNav() {
   const { cartQuantity } = useContext(CartContext);
   const navigate = useNavigate();
 
-  useEffect(() => {}, [queryResults]);
-
   const handleInputChange = (e) => {
     setQuery(e.target.value);
   };
 
-  const handleSearchSubmit = (e) => {
+  const handleSearchSubmit = async (e) => {
     e.preventDefault();
-    executeSearch(query);
-    navigate(`/search`);
+
+    try {
+      await executeSearch(query);
+      navigate(`/search`);
+    } catch (error) {
+      console.error("Error during search:", error);
+    }
   };
 
   const renderUserDropdown = () => {

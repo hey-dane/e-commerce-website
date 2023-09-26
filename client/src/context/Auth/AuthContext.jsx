@@ -22,25 +22,21 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
-  const [user, setUser] = useState(() => getLoggedInUser() || {});
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const loggedInUser = getLoggedInUser();
+
     if (loggedInUser && loggedInUser.username) {
       setUser(loggedInUser);
     } else {
-      console.error(
-        "Invalid user object retrieved from storage:",
-        loggedInUser
-      );
-      // Handle the error gracefully, such as logging out the user or clearing local storage
-      // setUser({});
+      setUser(null);
     }
   }, []);
 
   const initial = {
     user,
-    isAuthenticated: Object.keys(user).length > 0,
+    isAuthenticated: user !== null && Object.keys(user).length > 0,
   };
 
   const [state, dispatch] = useReducer(authReducer, initial);

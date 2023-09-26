@@ -55,7 +55,7 @@ export default function Jumbotron() {
       <div
         className="p-2 text-center"
         style={{
-          backgroundColor: "var(--color-background)",
+          backgroundColor: "var(--color-offset)",
           color: "var(--color-text)",
         }}
       >
@@ -79,7 +79,7 @@ export default function Jumbotron() {
       <div
         className="p-4 text-center"
         style={{
-          backgroundColor: "var(--color-background)",
+          backgroundColor: "var(--color-offset)",
           color: "var(--color-text)",
         }}
       >
