@@ -72,12 +72,12 @@ const Cart = () => {
 
   return (
     <section
-      className="vh-80"
+      className="vh-100"
       style={{ backgroundColor: "var(--color-background)" }}
       aria-label="Shopping Cart Section"
     >
-      <div className="container-fluid h-100">
-        <div className="row justify-content-center align-items-center h-100">
+      <div className="container-fluid">
+        <div className="row">
           <div className="col-md-12">
             <div
               className="card"
@@ -87,7 +87,7 @@ const Cart = () => {
               }}
             >
               <div
-                className="card-body p-4 p-lg-5"
+                className="card-body p-3 p-lg-4"
                 style={{ color: "var(--color-text)" }}
               >
                 <h2
@@ -104,7 +104,7 @@ const Cart = () => {
                     {cart.map((product, index) => (
                       <li
                         key={product.id || index}
-                        className="list-group-item d-flex justify-content-between align-items-center my-2"
+                        className="list-group-item d-flex justify-content-between align-items-center flex-column flex-md-row my-2"
                         style={{
                           backgroundColor: "var(--color-background)",
                           borderColor: "var(--color-border)",
@@ -112,56 +112,69 @@ const Cart = () => {
                         }}
                         aria-label={`Product: ${product.title}`}
                       >
-                        <img
-                          src={product.image}
-                          alt={product.title}
-                          style={{
-                            width: "50px",
-                            height: "50px",
-                            marginRight: "10px",
-                          }}
-                          aria-label={`Product Image: ${product.title}`}
-                        />
-                        <span className="flex-grow-1">
+                        <div className="d-flex align-items-center">
+                          <img
+                            src={product.image}
+                            alt={product.title}
+                            style={{
+                              width: "50px",
+                              height: "50px",
+                              marginRight: "10px",
+                            }}
+                            aria-label={`Product Image: ${product.title}`}
+                          />
                           <Link
                             to={`/products/${product.id}`}
-                            style={{ color: "var(--color-link)" }}
+                            style={{
+                              color: "var(--color-link)",
+                              maxWidth: "300px",
+                            }}
                             aria-label={`Product Title: ${product.title}`}
                           >
                             {product.title}
                           </Link>
-                        </span>
-                        <span style={{ color: "var(--color-border)" }}>
-                          ${product.price} x {product.quantity}
-                        </span>
-                        <input
-                          type="number"
-                          value={quantityInputs[product.id] || ""}
-                          onChange={(e) =>
-                            handleQuantityChange(
-                              product.id,
-                              parseInt(e.target.value)
-                            )
-                          }
-                          className="form-control mx-2"
-                          style={{ width: "70px" }}
-                          aria-label={`Quantity Input for ${product.title}`}
-                        />
-                        <button
-                          className="btn btn-lg"
-                          onClick={() => handleRemoveFromCart(product.id)}
-                          style={{
-                            backgroundColor: "var(--color-background)",
-                            color: "var(--color-text)",
-                          }}
-                          aria-label={`Remove Product: ${product.title}`}
-                        >
-                          <FontAwesomeIcon
-                            icon={faTrashCan}
-                            style={{ color: "var(--color-text)" }}
-                            aria-label={`Trash Can Icon for ${product.title}`}
-                          />
-                        </button>
+                        </div>
+                        <div className="d-flex align-items-center mt-3 mt-md-0">
+                          <span
+                            style={{
+                              color: "var(--color-border)",
+                              padding: "10px",
+                            }}
+                          >
+                            ${product.price} x {product.quantity}
+                          </span>
+                          <div className="input-group mt-2 mt-md-0">
+                            <input
+                              type="number"
+                              value={quantityInputs[product.id] || ""}
+                              onChange={(e) =>
+                                handleQuantityChange(
+                                  product.id,
+                                  parseInt(e.target.value)
+                                )
+                              }
+                              className="form-control"
+                              style={{ maxWidth: "70px" }}
+                              aria-label={`Quantity Input for ${product.title}`}
+                            />
+                            <button
+                              className="btn btn-lg"
+                              onClick={() => handleRemoveFromCart(product.id)}
+                              style={{
+                                backgroundColor: "var(--color-background)",
+                                color: "var(--color-text)",
+                                marginLeft: "10px",
+                              }}
+                              aria-label={`Remove Product: ${product.title}`}
+                            >
+                              <FontAwesomeIcon
+                                icon={faTrashCan}
+                                style={{ color: "var(--color-text)" }}
+                                aria-label={`Trash Can Icon for ${product.title}`}
+                              />
+                            </button>
+                          </div>
+                        </div>
                       </li>
                     ))}
                   </ul>
@@ -174,24 +187,25 @@ const Cart = () => {
                     Total: ${calculateTotal().toFixed(2)}
                   </strong>
                 </div>
-                <div className="mt-3 float-end">
-                  <button
-                    onClick={handleUpdateCartProduct}
-                    className="btn btn-lg btn-block me-2 custom-button mb-2"
-                    style={{ width: "100%", fontSize: "20px" }}
-                    aria-label="Update Cart Button"
-                  >
-                    Update Cart
-                  </button>
-
-                  <Link
-                    to="/order-details"
-                    className="btn btn-lg btn-block custom-button"
-                    style={{ width: "100%", fontSize: "20px" }}
-                    aria-label="Proceed to Order Details Button"
-                  >
-                    Proceed
-                  </Link>
+                <div className="mt-3 text-center">
+                  <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                    <button
+                      onClick={handleUpdateCartProduct}
+                      className="btn btn-lg custom-button mb-2"
+                      style={{ fontSize: "20px" }}
+                      aria-label="Update Cart Button"
+                    >
+                      Update Cart
+                    </button>
+                    <button
+                      onClick={() => {}}
+                      className="btn btn-lg custom-button mb-2"
+                      style={{ fontSize: "20px", marginLeft: "10px" }}
+                      aria-label="Proceed to Order Details Button"
+                    >
+                      Proceed
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

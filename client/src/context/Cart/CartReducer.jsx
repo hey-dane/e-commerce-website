@@ -3,13 +3,7 @@ export const cart = {
   cartQuantity: 0,
 };
 
-function computeCartQuantity(items) {
-  return items.reduce((total, product) => total + product.quantity, 0);
-}
-
 export const cartReducer = (state, action) => {
-  console.log("Current State:", state);
-  console.log("Received Action:", action);
   switch (action.type) {
     case "ADD_TO_CART":
       const existingProductIndex = state.items.findIndex(
@@ -34,9 +28,11 @@ export const cartReducer = (state, action) => {
       }
 
       return {
+        ...state,
         items: updatedItems,
         cartQuantity: computeCartQuantity(updatedItems),
       };
+
     case "UPDATE_CART_PRODUCT":
       const updatedProducts = state.items.map((product) =>
         product.id === action.productId
@@ -44,6 +40,7 @@ export const cartReducer = (state, action) => {
           : product
       );
       return {
+        ...state,
         items: updatedProducts,
         cartQuantity: computeCartQuantity(updatedProducts),
       };
@@ -53,12 +50,14 @@ export const cartReducer = (state, action) => {
         (product) => product.id !== action.productId
       );
       return {
+        ...state,
         items: remainingItems,
         cartQuantity: computeCartQuantity(remainingItems),
       };
 
     case "EMPTY_CART":
       return {
+        ...state,
         items: [],
         cartQuantity: 0,
       };
@@ -73,6 +72,7 @@ export const cartReducer = (state, action) => {
       }));
 
       return {
+        ...state,
         items: initializedItems,
         cartQuantity: computeCartQuantity(initializedItems),
       };
@@ -81,3 +81,7 @@ export const cartReducer = (state, action) => {
       return state;
   }
 };
+
+function computeCartQuantity(items) {
+  return items.reduce((total, product) => total + product.quantity, 0);
+}
