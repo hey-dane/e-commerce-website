@@ -137,8 +137,11 @@ export default function SingleProductView() {
                         setQuantity(Math.max(1, Number(e.target.value)))
                       }
                       min="1"
-                      style={{ width: "40px", fontSize: "14px" }}
-                      inputmode="numeric"
+                      style={{
+                        width: "60px",
+                        fontSize: "14px",
+                      }}
+                      inputMode="numeric"
                       aria-label="Quantity Input"
                     />
                     <button
