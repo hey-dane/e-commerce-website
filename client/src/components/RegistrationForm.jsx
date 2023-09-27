@@ -91,7 +91,7 @@ export default function RegistrationForm() {
 
   return (
     <section
-      className="vh-auto"
+      className="vh-auto registerpage"
       style={{ backgroundColor: "var(--color-secondarybackground)" }}
     >
       <div className="container-fluid h-100">

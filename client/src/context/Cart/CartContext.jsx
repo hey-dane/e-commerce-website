@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import { getLocalStorageCart, setLocalStorageCart } from "./CartActions";
-import { cartReducer } from "./cartReducer";
+import { cartReducer, cart as initialCart } from "./cartReducer";
 
 export const CartContext = createContext();
 
@@ -14,16 +14,19 @@ export const useCart = () => {
   return useContext(CartContext);
 };
 
-const updateCartQuantity = (dispatch, cart) => {
-  const totalQuantity = cart.reduce(
-    (acc, product) => acc + product.quantity,
-    0
-  );
-  dispatch({ type: "UPDATE_CART_QUANTITY", cartQuantity: totalQuantity });
-};
+/* const updateCartQuantity = (dispatch, cart) => {
+    const totalQuantity = cart.reduce(
+      (total, product) => total + product.quantity,
+      0
+    );
+    dispatch({ type: "UPDATE_CART_QUANTITY", cartQuantity: totalQuantity });
+  }; */
 
 export const CartProvider = ({ children }) => {
-  const [cart, dispatch] = useReducer(cartReducer, []);
+  const [cart, dispatch] = useReducer(cartReducer, {
+    items: [],
+    cartQuantity: 0,
+  });
   const [cartQuantity, setCartQuantity] = useState(0);
   const [paymentStatus, setPaymentStatus] = useState(null);
 
@@ -38,16 +41,20 @@ export const CartProvider = ({ children }) => {
     }
   }, [paymentStatus]);
 
-  const addToCart = (product, quantity) => {
+  const addToCart = (product, quantity = 1) => {
+    const validQuantity = Number(quantity) || 1;
     const existingProduct = cart.find((p) => p.id === product.id);
 
     if (existingProduct) {
       updateCartProduct(
         existingProduct.id,
-        existingProduct.quantity + quantity
+        existingProduct.quantity + validQuantity
       );
     } else {
-      dispatch({ type: "ADD_TO_CART", product: { ...product, quantity } });
+      dispatch({
+        type: "ADD_TO_CART",
+        product: { ...product, quantity: validQuantity },
+      });
     }
   };
 
@@ -67,11 +74,11 @@ export const CartProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    setLocalStorageCart(cart);
+    setLocalStorageCart(cart.items);
   }, [cart]);
 
   useEffect(() => {
-    const totalQuantity = cart.reduce(
+    const totalQuantity = cart.items.reduce(
       (total, product) => total + product.quantity,
       0
     );
@@ -81,10 +88,9 @@ export const CartProvider = ({ children }) => {
   return (
     <CartContext.Provider
       value={{
-        cart,
-        cartQuantity,
+        cart: cart.items,
+        cartQuantity: cart.cartQuantity,
         paymentStatus,
-
         dispatch,
         addToCart,
         updateCartProduct,

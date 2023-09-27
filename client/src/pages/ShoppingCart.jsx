@@ -1,12 +1,6 @@
-import React, {
-  createContext,
-  useContext,
-  useReducer,
-  useState,
-  useEffect,
-} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
-import { useCart } from "../context/Cart/CartContext";
+import { useCart, CartContext } from "../context/Cart/CartContext";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
@@ -16,16 +10,19 @@ import {
 } from "../context/Cart/CartActions";
 
 const Cart = () => {
-  const { cart, dispatch, removeFromCart, emptyCart, checkout } = useCart();
+  const { cart, dispatch } = useContext(CartContext);
+
+  const { patch, removeFromCart, emptyCart, checkout } = useCart();
+  console.log("Cart Contents:", cart);
+
   const [quantityInputs, setQuantityInputs] = useState({});
-  const [orderSubmitted, setOrderSubmitted] = useState(false);
 
   useEffect(() => {
     const storedCart = getLocalStorageCart();
     if (storedCart && storedCart.length > 0) {
       dispatch({ type: "INITIALIZE_CART", cart: storedCart });
     }
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     setLocalStorageCart(cart);
@@ -39,11 +36,11 @@ const Cart = () => {
       [productId]: undefined,
     }));
   };
-  const handleQuantityChange = (productId, newQuantity) => {
-    if (newQuantity < 0) {
-      newQuantity = 0;
-    }
 
+  const handleQuantityChange = (productId, newQuantity) => {
+    if (isNaN(newQuantity) || newQuantity < 0) {
+      newQuantity = "";
+    }
     setQuantityInputs((prevInputs) => ({
       ...prevInputs,
       [productId]: newQuantity,
@@ -51,18 +48,19 @@ const Cart = () => {
   };
 
   const handleUpdateCartProduct = () => {
-    const updatedCart = cart.map((product) => {
-      if (quantityInputs[product.id] !== undefined) {
-        return {
-          ...product,
-          quantity: quantityInputs[product.id],
-        };
+    Object.entries(quantityInputs).forEach(([productId, newQuantity]) => {
+      if (
+        newQuantity !== undefined &&
+        !isNaN(newQuantity) &&
+        newQuantity >= 0
+      ) {
+        dispatch({
+          type: "UPDATE_CART_PRODUCT",
+          productId: parseInt(productId),
+          newQuantity,
+        });
       }
-      return product;
     });
-
-    dispatch({ type: "UPDATE_CART", cart: updatedCart });
-
     setQuantityInputs({});
   };
 
@@ -71,9 +69,10 @@ const Cart = () => {
       return acc + product.price * product.quantity;
     }, 0);
   };
+
   return (
     <section
-      className="vh-100"
+      className="vh-80"
       style={{ backgroundColor: "var(--color-background)" }}
       aria-label="Shopping Cart Section"
     >
@@ -105,10 +104,11 @@ const Cart = () => {
                     {cart.map((product, index) => (
                       <li
                         key={product.id || index}
-                        className="list-group-item d-flex justify-content-between align-items-center"
+                        className="list-group-item d-flex justify-content-between align-items-center my-2"
                         style={{
                           backgroundColor: "var(--color-background)",
                           borderColor: "var(--color-border)",
+                          borderTop: "1px solid var(--color-border)",
                         }}
                         aria-label={`Product: ${product.title}`}
                       >
@@ -131,7 +131,7 @@ const Cart = () => {
                             {product.title}
                           </Link>
                         </span>
-                        <span style={{ color: "var(--color-accent)" }}>
+                        <span style={{ color: "var(--color-border)" }}>
                           ${product.price} x {product.quantity}
                         </span>
                         <input
@@ -168,7 +168,7 @@ const Cart = () => {
                 )}
                 <div className="mt-3 mb-4">
                   <strong
-                    style={{ color: "var(--color-accent)" }}
+                    style={{ color: "var(--color-border)" }}
                     aria-label={`Total Price: $${calculateTotal().toFixed(2)}`}
                   >
                     Total: ${calculateTotal().toFixed(2)}
@@ -177,7 +177,8 @@ const Cart = () => {
                 <div className="mt-3 float-end">
                   <button
                     onClick={handleUpdateCartProduct}
-                    className="btn btn-lg btn-block me-2 custom-button"
+                    className="btn btn-lg btn-block me-2 custom-button mb-2"
+                    style={{ width: "100%", fontSize: "20px" }}
                     aria-label="Update Cart Button"
                   >
                     Update Cart
@@ -186,9 +187,10 @@ const Cart = () => {
                   <Link
                     to="/order-details"
                     className="btn btn-lg btn-block custom-button"
+                    style={{ width: "100%", fontSize: "20px" }}
                     aria-label="Proceed to Order Details Button"
                   >
-                    Proceed to Order Details
+                    Proceed
                   </Link>
                 </div>
               </div>

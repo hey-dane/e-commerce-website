@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { useNavigate } from "react-router-dom";
+import { withRouter } from "react-router-dom";
+
 import Error from "../pages/Error";
 
 class ErrorBoundary extends Component {
@@ -33,4 +35,4 @@ class ErrorBoundary extends Component {
   }
 }
 
-export default ErrorBoundary;
+export default withRouter(ErrorBoundary);

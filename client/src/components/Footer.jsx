@@ -7,28 +7,41 @@ export default function Footer() {
       className="text-center text-white"
       style={{
         backgroundColor: "var(--color-dark)",
-        marginTop: "20px",
+        position: "fixed",
+        bottom: "0",
+        width: "100%",
+        padding: "5px 0",
+        zIndex: 2,
       }}
     >
-      <div className="container py-2">
-        <section className="mb-2">
-          <p className="d-flex justify-content-center align-items-center">
-            <span className="me-3" style={{ color: "var(--color-light)" }}>
-              Register for free
-            </span>
-            <Link to="/register" className="btn btn-outline-light rounded">
-              Sign up!
-            </Link>
-          </p>
-        </section>
-      </div>
-
       <div
-        className="text-center p-2"
-        style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}
+        className="container d-flex align-items-center justify-content-center"
+        style={{
+          fontSize: "0.7rem",
+          gap: "10px",
+        }}
       >
-        &copy; {new Date().getFullYear()} shop. E-Commerce Store. All rights
-        reserved.
+        <span style={{ color: "var(--color-light)" }}>Register for free</span>
+
+        <Link
+          to="/register"
+          className="btn btn-outline-light btn-sm"
+          style={{
+            fontSize: "0.7rem",
+            padding: "2px 10px",
+          }}
+        >
+          Sign up!
+        </Link>
+
+        <span
+          style={{
+            padding: "2px 4px",
+            borderRadius: "2px",
+          }}
+        >
+          &copy; {new Date().getFullYear()} shop. All rights reserved.
+        </span>
       </div>
     </footer>
   );

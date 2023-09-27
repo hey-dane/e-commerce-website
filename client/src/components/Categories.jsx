@@ -48,6 +48,7 @@ export default function Categories() {
       style={{
         backgroundColor: "var(--color-background)",
         color: "var(--color-text)",
+        paddingBottom: "180px",
       }}
     >
       <div

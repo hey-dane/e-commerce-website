@@ -197,7 +197,7 @@ export default function TopNav() {
                       color: "var(--navbar-color)",
                     }}
                   >
-                    {cartQuantity}
+                    {isNaN(cartQuantity) ? 0 : cartQuantity}
                   </span>
                 </Link>
 

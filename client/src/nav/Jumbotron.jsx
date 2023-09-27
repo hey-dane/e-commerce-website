@@ -53,7 +53,7 @@ export default function Jumbotron() {
   if (isHomePage) {
     jumbotronContent = (
       <div
-        className="p-2 text-center"
+        className="p-1 text-center"
         style={{
           backgroundColor: "var(--color-offset)",
           color: "var(--color-text)",
@@ -62,14 +62,14 @@ export default function Jumbotron() {
         <div className="header" id="jumbotron-container">
           <div className="animated-text slide-from-top" id="salestext">
             WOMENS SHIRTS
-            <p>Starting at $7.95!</p>
+            <p style={{ fontSize: "16px" }}>Starting at $7.95!</p>
           </div>
           <div className="animated-text">
             <h5>ALL ACCESSORIES 50% OFF</h5>
           </div>
           <div className="animated-text slide-from-top" id="salestext">
             NEW SELECTION OF ELECTRONICS
-            <p>TV, memory cards and more!</p>
+            <p style={{ fontSize: "16px" }}>TV, memory cards and more!</p>
           </div>
         </div>
       </div>
@@ -77,7 +77,7 @@ export default function Jumbotron() {
   } else {
     jumbotronContent = (
       <div
-        className="p-4 text-center"
+        className="p-3 text-center"
         style={{
           backgroundColor: "var(--color-offset)",
           color: "var(--color-text)",

@@ -6,7 +6,7 @@ import { useCart } from "../context/Cart/CartContext";
 export default function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
-  const { cart, dispatch, checkout } = useCart();
+  const { patch, checkout } = useCart();
   const [message, setMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [nameOnCard, setNameOnCard] = useState("");

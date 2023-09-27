@@ -40,9 +40,11 @@ export default function LoginForm() {
 
   return (
     <section
-      className="vh-100"
       style={{
         backgroundColor: "var(--color-secondarybackground)",
+        minHeight: "100vh",
+        marginTop: "20px",
+        paddingTop: "20px",
       }}
       id="loginpage"
       aria-label="Login Page"

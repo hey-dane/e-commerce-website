@@ -28,32 +28,40 @@ function App() {
 
   return (
     <>
-      <ErrorBoundary>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/allproducts" element={<AllProducts />} />
-          <Route path="/category/:categoryName" element={<Categories />} />
-          <Route path="/products/:id" element={<SingleProductView />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<RegistrationForm />} />
-          <Route path="/account/" element={<Account />} />
-          <Route
-            path="/search"
-            element={<SearchResult queryResults={queryResults} />}
-          />
-          <Route
-            path="/order-details"
-            element={<OrderDetails addressTypes={["Billing", "Shipping"]} />}
-          />
-          <Route path="/payment" element={<Payment />} />
-          <Route path="/completion" element={<Completion />} />
-          <Route path="*" element={<Error />} />
-        </Routes>
-
-        <Footer />
-      </ErrorBoundary>
+      <div className="d-flex flex-column min-vh-100">
+        <ErrorBoundary>
+          <Navbar />
+          <div
+            className="container flex-grow-1"
+            style={{ paddingBottom: "60px" }}
+          >
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/allproducts" element={<AllProducts />} />
+              <Route path="/category/:categoryName" element={<Categories />} />
+              <Route path="/products/:id" element={<SingleProductView />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<RegistrationForm />} />
+              <Route path="/account/" element={<Account />} />
+              <Route
+                path="/search"
+                element={<SearchResult queryResults={queryResults} />}
+              />
+              <Route
+                path="/order-details"
+                element={
+                  <OrderDetails addressTypes={["Billing", "Shipping"]} />
+                }
+              />
+              <Route path="/payment" element={<Payment />} />
+              <Route path="/completion" element={<Completion />} />
+              <Route path="*" element={<Error />} />
+            </Routes>
+          </div>
+          <Footer />
+        </ErrorBoundary>
+      </div>
     </>
   );
 }

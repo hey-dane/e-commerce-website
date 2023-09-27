@@ -19,9 +19,18 @@
   --color-text: #0c0f51;
   --color-accent: #ffbf00;
 }
+
 body {
   font-family: var(--font-lato);
   background-color: var(--color-background);
+}
+
+.order-details {
+  padding-bottom: 100px;
+}
+
+.registerpage {
+  padding-bottom: 120px;
 }
 
 .dropdown-item:focus,
@@ -32,7 +41,7 @@ body {
   box-shadow: none !important;
 }
 
-.dropdown-item:hover {
+.dropdown-item {
   color: var(--color-border) !important;
 }
 
@@ -67,14 +76,17 @@ li {
 }
 
 .custom-button {
-  background-color: var(--color-background);
-  border-color: var(--color-dark);
+  background-color: var(--color-secondarybackground);
+  border-color: var(--color-bold);
+  border-width: 2px;
   color: var(--color-text);
 }
 
 .custom-button:hover {
-  background-color: var(--color-bold) !important;
-  color: var(--color-secondarybackground) !important;
+  background-color: var(--color-text);
+  border-color: var(--color-accent);
+  border-width: 2px;
+  color: var(--color-secondarybackground);
 }
 
 #login-image {
@@ -86,12 +98,16 @@ li {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  padding-top: 10px;
+  padding-top: 5px;
   align-items: center;
   overflow: hidden;
+  font-size: 0.6rem;
 }
 
 /*hero page header */
+.carousel {
+  margin-top: 20px;
+}
 .carousel-content {
   display: flex;
   flex-direction: column;
@@ -240,5 +256,61 @@ li {
 @media (max-width: 768px) {
   .animated-text.slide-from-top {
     display: none;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .container {
+    max-width: 1400px;
+  }
+
+  body {
+    font-size: 18px;
+  }
+
+  h1 {
+    font-size: 3rem;
+  }
+
+  h2,
+  h5,
+  h6 {
+    font-size: calc(1.5em + 1vw);
+    line-height: calc(1.7em + 1vw);
+  }
+
+  img.img-fluid {
+    max-width: 80%;
+    margin: 0 auto;
+  }
+
+  p {
+    font-size: 18px;
+  }
+
+  .quantity-selector {
+    justify-content: center;
+  }
+
+  button.custom-button {
+    font-size: 1.5rem;
+  }
+
+  .container-fluid {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  .card {
+    margin: 30px 15px;
+  }
+
+  .card-body {
+    padding: 30px;
+  }
+
+  .col-md-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
   }
 }
