@@ -138,6 +138,7 @@ export default function SingleProductView() {
                       }
                       min="1"
                       style={{ width: "40px", fontSize: "14px" }}
+                      inputmode="numeric"
                       aria-label="Quantity Input"
                     />
                     <button
