@@ -1,12 +1,12 @@
 import React, { useState, useContext } from "react";
 import { PaymentElement } from "@stripe/react-stripe-js";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
-import { useCart } from "../context/Cart/CartContext";
+import { CartContext } from "../context/Cart/CartContext";
 
 export default function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
-  const { patch, checkout } = useCart();
+  const { cartQuantity, cart, dispatch, checkout } = useContext(CartContext);
   const [message, setMessage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [nameOnCard, setNameOnCard] = useState("");
@@ -25,7 +25,7 @@ export default function CheckoutForm() {
         confirmParams: {
           return_url: `${window.location.origin}/completion`,
         },
-        cart: cart,
+        cart: cart.products, // Send the products array to Stripe
       });
 
       if (!error) {
@@ -42,10 +42,6 @@ export default function CheckoutForm() {
       setIsProcessing(false);
     }
   };
-
-  const cartTotal = cart.reduce((total, product) => {
-    return total + product.price * product.quantity;
-  }, 0);
 
   return (
     <div
@@ -71,25 +67,27 @@ export default function CheckoutForm() {
               <h2 className="ms-4" style={{ color: "var(--color-text)" }}>
                 Your Cart
               </h2>
-              <ul style={{ color: "var(--color-text)" }}>
-                {cart.map((product) => (
-                  <li key={product.id} style={{ color: "var(--color-text)" }}>
-                    <img
-                      src={product.image}
-                      alt={product.title}
-                      style={{
-                        width: "50px",
-                        height: "50px",
-                        marginRight: "10px",
-                      }}
-                    />
-                    <span style={{ color: "var(--color-text)" }}>
-                      {product.title} x {product.quantity} - $
-                      {product.price * product.quantity}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+              {Array.isArray(cart.products) && (
+                <ul style={{ color: "var(--color-text)" }}>
+                  {cart.products.map((product) => (
+                    <li key={product.id} style={{ color: "var(--color-text)" }}>
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        style={{
+                          maxWidth: "100px",
+                          marginRight: "10px",
+                          paddingBottom: "20px",
+                        }}
+                      />
+                      <span style={{ color: "var(--color-text)" }}>
+                        {product.title} x {product.quantity} - $
+                        {product.price * product.quantity}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
             {/* Cart total */}
@@ -97,7 +95,7 @@ export default function CheckoutForm() {
               className="cart-total ms-4"
               style={{ color: "var(--color-accent)" }}
             >
-              <h3>Total: ${cartTotal.toFixed(2)}</h3>
+              <h3>Total: ${cartQuantity.toFixed(2)}</h3>
             </div>
             <div
               className="card-body p-4 p-lg-5"

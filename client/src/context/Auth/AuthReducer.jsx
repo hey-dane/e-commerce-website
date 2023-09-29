@@ -1,28 +1,29 @@
-export const LOGIN = "LOGIN";
-export const LOGOUT = "LOGOUT";
-export const REGISTER = "REGISTER";
-export const UPDATE_USER_DATA = "UPDATE_USER_DATA";
+import {
+  AUTH_LOGIN,
+  AUTH_LOGOUT,
+  AUTH_REGISTER,
+  UPDATE_USER_DATA,
+} from "./AuthContext";
 
 const authReducer = (state, action) => {
   switch (action.type) {
-    case UPDATE_USER_DATA:
-      localStorage.setItem("user", JSON.stringify(action.payload));
+    case AUTH_LOGIN:
+    case AUTH_REGISTER:
       return {
         ...state,
         user: action.payload,
-      };
-    case LOGIN:
-    case REGISTER:
-      localStorage.setItem("user", JSON.stringify(action.payload));
-      return {
-        user: action.payload,
         isAuthenticated: true,
       };
-    case LOGOUT:
-      localStorage.removeItem("user");
+    case AUTH_LOGOUT:
       return {
+        ...state,
         user: null,
         isAuthenticated: false,
+      };
+    case UPDATE_USER_DATA:
+      return {
+        ...state,
+        user: action.payload,
       };
     default:
       return state;

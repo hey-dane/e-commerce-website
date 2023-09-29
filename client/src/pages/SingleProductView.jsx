@@ -36,16 +36,9 @@ export default function SingleProductView() {
   }, [id]);
 
   const handleAddToCart = () => {
-    console.log("Product:", product);
-    console.log("Quantity:", quantity);
-
-    dispatch({
-      type: "ADD_TO_CART",
-      product: { ...product, quantity },
-    });
+    addToCart(product, quantity);
     navigate("/cart");
   };
-
   return (
     <div className="container-fluid mt-5">
       <div className="row justify-content-center align-items-center h-90">

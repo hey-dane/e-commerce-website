@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/Auth/AuthContext";
 import RegistrationForm from "../components/RegistrationForm";
+import { Link } from "react-router-dom";
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({ username: "", password: "" });
@@ -155,7 +156,6 @@ export default function LoginForm() {
                       >
                         {errorMessage}
                       </p>
-
                       <p
                         className="mb-5 pb-lg-2"
                         style={{
@@ -163,23 +163,23 @@ export default function LoginForm() {
                           fontWeight: "600",
                         }}
                       >
-                        Don't have an account?{" "}
-                        <a
-                          href="/register"
+                        Don't have an account?
+                        <Link
+                          to="/register"
                           style={{
                             color: "var(--color-accent)",
                             transition: "color 0.3s",
                           }}
                           aria-label="Create Account Link"
                           onMouseEnter={(e) => {
-                            e.target.style.color = "#007a99";
+                            e.currentTarget.style.color = "#007a99";
                           }}
                           onMouseLeave={(e) => {
-                            e.target.style.color = "var(--color-accent)";
+                            e.currentTarget.style.color = "var(--color-accent)";
                           }}
                         >
                           Create an account
-                        </a>
+                        </Link>
                       </p>
                     </form>
                   </div>

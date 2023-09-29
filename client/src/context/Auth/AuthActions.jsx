@@ -8,6 +8,8 @@ const clearUserDataFromLocalStorage = () =>
   localStorage.removeItem(localStorageKey);
 
 export const registerUser = async (userData) => {
+  console.log("registerUser Called", userData);
+
   const existingUsers =
     JSON.parse(localStorage.getItem(usersLocalStorageKey)) || [];
 
@@ -75,3 +77,8 @@ export const updateUserDataAction = (userData) => {
 
   return updatedUserData;
 };
+
+export const AUTH_LOGIN = "AUTH_LOGIN";
+export const AUTH_LOGOUT = "AUTH_LOGOUT";
+export const AUTH_REGISTER = "AUTH_REGISTER";
+export const UPDATE_USER_DATA = "UPDATE_USER_DATA";

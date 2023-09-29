@@ -6,44 +6,50 @@ import React, {
   useState,
 } from "react";
 import { getLocalStorageCart, setLocalStorageCart } from "./CartActions";
-import { cartReducer, cart as initialCart } from "./cartReducer";
+import { cartReducer, cartStart as initialCart } from "./cartReducer";
 
-export const CartContext = createContext();
+export const CartContext = createContext({
+  cart: { products: [], cartQuantity: 0 },
+  dispatch: () => {},
+});
+
+export const computeCartQuantity = (products) => {
+  return products.reduce((total, product) => total + product.quantity, 0);
+};
 
 export const useCart = () => {
   return useContext(CartContext);
 };
 
-/* const updateCartQuantity = (dispatch, cart) => {
-    const totalQuantity = cart.reduce(
-      (total, product) => total + product.quantity,
-      0
-    );
-    dispatch({ type: "UPDATE_CART_QUANTITY", cartQuantity: totalQuantity });
-  }; */
-
 export const CartProvider = ({ children }) => {
-  const [cart, dispatch] = useReducer(cartReducer, {
-    items: [],
-    cartQuantity: 0,
-  });
+  const storedCart = getLocalStorageCart() || { products: [], cartQuantity: 0 };
+  const [cart, dispatch] = useReducer(cartReducer, storedCart);
   const [cartQuantity, setCartQuantity] = useState(0);
   const [paymentStatus, setPaymentStatus] = useState(null);
+
+  const emptyCart = () => {
+    dispatch({ type: "EMPTY_CART" });
+
+    setLocalStorageCart([]);
+
+    setCartQuantity(0);
+  };
 
   useEffect(() => {
     if (paymentStatus === "success") {
       const storedCart = getLocalStorageCart();
-      if (storedCart && storedCart.length > 0) {
+      if (storedCart && storedCart.products && storedCart.products.length > 0) {
         dispatch({ type: "INITIALIZE_CART", cart: storedCart });
       }
-
       setPaymentStatus(null);
     }
   }, [paymentStatus]);
 
   const addToCart = (product, quantity = 1) => {
     const validQuantity = Number(quantity) || 1;
-    const existingProduct = cart.find((p) => p.id === product.id);
+    const existingProduct = (cart.products || []).find(
+      (p) => p.id === product.id
+    );
 
     if (existingProduct) {
       updateCartProduct(
@@ -56,6 +62,8 @@ export const CartProvider = ({ children }) => {
         product: { ...product, quantity: validQuantity },
       });
     }
+
+    setLocalStorageCart(cart);
   };
 
   const updateCartProduct = (productId, newQuantity) => {
@@ -74,28 +82,40 @@ export const CartProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    setLocalStorageCart(cart.items);
+    try {
+      setLocalStorageCart(cart);
+    } catch (error) {
+      console.error("Failed to access local storage", error);
+    }
   }, [cart]);
 
   useEffect(() => {
-    const totalQuantity = cart.items.reduce(
+    const totalQuantity = (cart.products || []).reduce(
       (total, product) => total + product.quantity,
       0
     );
     setCartQuantity(totalQuantity);
-  }, [cart]);
+  }, [cart.products]);
+
+  useEffect(() => {
+    const storedCart = getLocalStorageCart();
+    if (storedCart && storedCart.products && storedCart.products.length > 0) {
+      dispatch({ type: "INITIALIZE_CART", cart: storedCart });
+    }
+  }, []);
 
   return (
     <CartContext.Provider
       value={{
-        cart: cart.items,
-        cartQuantity: cart.cartQuantity,
+        cart,
+        cartQuantity,
         paymentStatus,
         dispatch,
         addToCart,
         updateCartProduct,
         removeFromCart,
         checkout,
+        emptyCart,
       }}
     >
       {children}

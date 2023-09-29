@@ -1,87 +1,115 @@
-export const cart = {
-  items: [],
+import { computeCartQuantity } from "./CartContext";
+
+export const cartStart = {
+  products: [],
   cartQuantity: 0,
+  initialized: false,
 };
 
-export const cartReducer = (state, action) => {
-  switch (action.type) {
-    case "ADD_TO_CART":
-      const existingProductIndex = state.items.findIndex(
-        (product) => product.id === action.product.id
-      );
+export const cartReducer = (state = cartStart, action) => {
+  console.log("Current State:", state, "Action:", action); // Debug log
 
-      let updatedItems;
-      if (existingProductIndex !== -1) {
-        updatedItems = [...state.items];
-        updatedItems[existingProductIndex].quantity += action.product.quantity;
-      } else {
-        updatedItems = [
-          ...state.items,
-          {
-            ...action.product,
-            quantity:
-              typeof action.product.quantity === "number"
-                ? action.product.quantity
-                : 1,
-          },
-        ];
+  switch (action.type) {
+    case "ADD_TO_CART": {
+      const { product } = action;
+
+      if (
+        !product ||
+        !Number.isInteger(product.quantity) ||
+        product.quantity <= 0
+      ) {
+        return state; // Invalid product, return the current state.
       }
 
-      return {
-        ...state,
-        items: updatedItems,
-        cartQuantity: computeCartQuantity(updatedItems),
-      };
+      const existingProductIndex = (state.products || []).findIndex(
+        (p) => p.id === product.id
+      );
+
+      if (existingProductIndex !== -1) {
+        // Product already exists in the cart, so update its quantity.
+        const updatedProducts = [...(state.products || [])];
+        updatedProducts[existingProductIndex] = {
+          ...updatedProducts[existingProductIndex],
+          quantity:
+            updatedProducts[existingProductIndex].quantity + product.quantity,
+        };
+
+        return {
+          ...state,
+          products: updatedProducts,
+          cartQuantity: state.cartQuantity + product.quantity,
+        };
+      } else {
+        // Product is not in the cart, so add it with the input quantity.
+        const newProduct = {
+          ...product,
+          quantity: typeof product.quantity === "number" ? product.quantity : 1,
+        };
+
+        return {
+          ...state,
+          products: [...(state.products || []), newProduct],
+          cartQuantity: state.cartQuantity + newProduct.quantity,
+        };
+      }
+    }
 
     case "UPDATE_CART_PRODUCT":
-      const updatedProducts = state.items.map((product) =>
-        product.id === action.productId
+      const updatedProductsList = (state.products || []).map((product) =>
+        product.id === Number(action.productId)
           ? { ...product, quantity: action.newQuantity }
           : product
       );
+      console.log("Updated Products:", updatedProductsList);
+
       return {
         ...state,
-        items: updatedProducts,
-        cartQuantity: computeCartQuantity(updatedProducts),
+        products: updatedProductsList,
+        cartQuantity: computeCartQuantity(updatedProductsList),
       };
 
     case "REMOVE_FROM_CART":
-      const remainingItems = state.items.filter(
+      const remainingProducts = state.products.filter(
         (product) => product.id !== action.productId
       );
       return {
         ...state,
-        items: remainingItems,
-        cartQuantity: computeCartQuantity(remainingItems),
+        products: remainingProducts,
+        cartQuantity: computeCartQuantity(remainingProducts),
       };
 
     case "EMPTY_CART":
       return {
         ...state,
-        items: [],
+        products: [],
         cartQuantity: 0,
       };
 
     case "INITIALIZE_CART":
-      const initializedItems = action.cart.map((item) => ({
-        ...item,
-        quantity:
-          typeof item.quantity === "number" && item.quantity > 0
-            ? item.quantity
-            : 1,
-      }));
+      console.log("Type of action.cart:", typeof action.cart); // Debug log to check the type of action.cart
 
-      return {
-        ...state,
-        items: initializedItems,
-        cartQuantity: computeCartQuantity(initializedItems),
-      };
+      if (!state.initialized) {
+        // If action.cart is an object, convert it to an array
+        const initializedProducts = Array.isArray(action.cart)
+          ? action.cart
+          : Object.values(action.cart).map((item) => ({
+              ...item,
+              quantity:
+                typeof item.quantity === "number" && item.quantity > 0
+                  ? item.quantity
+                  : 1,
+            }));
+
+        return {
+          ...state,
+          products: initializedProducts,
+          cartQuantity: computeCartQuantity(initializedProducts),
+          initialized: true,
+        };
+      }
+      return state;
 
     default:
-      return state;
+      return state; // Add a default case to return the current state for unknown actions.
   }
 };
-
-function computeCartQuantity(items) {
-  return items.reduce((total, product) => total + product.quantity, 0);
-}

@@ -1,11 +1,19 @@
-const CART_STORAGE_KEY = "cart";
+export const CART_STORAGE_KEY = "cart";
 
 export const getLocalStorageCart = () => {
-  return JSON.parse(localStorage.getItem(CART_STORAGE_KEY) || "[]");
+  try {
+    return JSON.parse(localStorage.getItem(CART_STORAGE_KEY) || "[]");
+  } catch (error) {
+    console.error("Failed to access local storage", error);
+    return [];
+  }
 };
-
 export const setLocalStorageCart = (cart) => {
-  localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart || []));
+  try {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+  } catch (error) {
+    console.error("Failed to set item in local storage", error);
+  }
 };
 
 export const getAllCarts = getLocalStorageCart;

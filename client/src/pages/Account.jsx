@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/Auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 export default function Account() {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
   const { user, updateUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -16,6 +19,8 @@ export default function Account() {
 
   useEffect(() => {
     if (user) {
+      setIsLoading(false);
+
       const { address = {}, phone = "" } = user;
       setFormData({
         street: address.street || "",
@@ -24,15 +29,13 @@ export default function Account() {
         zipcode: address.zipcode || "",
         phone: phone,
       });
+    } else {
+      navigate("/login");
     }
-  }, [user]);
+  }, [user, navigate]);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  const { name = {}, email = "", username = "" } = user;
-  const { firstname = "", lastname = "" } = name;
+  const { name = {}, email = "", username = "" } = user || {};
+  const { firstname = "", lastname = "" } = name || {};
 
   const toggleEdit = () => {
     setIsEditing(!isEditing);
@@ -69,7 +72,7 @@ export default function Account() {
       style={{
         backgroundColor: "var(--color-secondarybackground)",
       }}
-      id="profilepage"
+      id="account"
       aria-label="User Account Profile"
     >
       <div className="container h-100">

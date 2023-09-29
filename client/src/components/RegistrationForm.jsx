@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../context/Auth/AuthActions";
-import InputMask from "react-input-mask";
-
 export default function RegistrationForm() {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
+    confirmPassword: "",
+
     email: "",
     name: { firstname: "", lastname: "" },
     address: {
@@ -22,13 +22,32 @@ export default function RegistrationForm() {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Modify the handleInputChange function to include logic for formatting phone numbers
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+
+    // Check if the changed input is the phone input
+    if (name === "phone") {
+      let val = value.replace(/\D/g, ""); // Remove all non-numeric characters
+
+      // Format the string as phone number
+      if (val.length > 6)
+        val = `(${val.substring(0, 3)}) ${val.substring(3, 6)}-${val.substring(
+          6
+        )}`;
+      else if (val.length > 3)
+        val = `(${val.substring(0, 3)}) ${val.substring(3)}`;
+      else if (val.length > 0) val = `(${val}`;
+
+      setFormData({ ...formData, [name]: val });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleRegistrationSubmit = async (e) => {
     e.preventDefault();
+    console.log("handleRegistrationSubmit Called", formData);
 
     const { username, password, email, name, address, confirmPassword } =
       formData;
@@ -41,6 +60,32 @@ export default function RegistrationForm() {
       return;
     }
 
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setErrorMessage("Please enter a valid email address.");
+      return;
+    }
+
+    if (
+      password.length < 8 ||
+      !/\d/.test(password) ||
+      !/[!@#$%^&*]/.test(password)
+    ) {
+      setErrorMessage(
+        "Password must be at least 8 characters long, contain a number and a special character."
+      );
+      return;
+    }
+
+    if (
+      password.length < 8 ||
+      !/\d/.test(password) ||
+      !/[!@#$%^&*]/.test(password)
+    ) {
+      setErrorMessage(
+        "Password must be at least 8 characters long, contain a number and a special character."
+      );
+      return;
+    }
     if (isEmpty(name.firstname) || isEmpty(name.lastname)) {
       setErrorMessage("Please fill in both first and last name.");
       return;
@@ -65,7 +110,7 @@ export default function RegistrationForm() {
       const response = await registerUser(formData);
 
       if (response && response.id) {
-        navigate(`/profile/`);
+        navigate(`/login`);
       } else {
         setErrorMessage("Registration failed. Please try again.");
       }
@@ -294,26 +339,15 @@ export default function RegistrationForm() {
                             <label htmlFor="phone" className="form-label">
                               Phone
                             </label>
-                            <InputMask
-                              placeholder="(123) 456-7890"
-                              mask="(999) 999-9999"
-                              maskChar={null}
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="phone"
+                              name="phone"
                               value={formData.phone}
-                              onChange={(e) => {
-                                const val = e.target.value.replace(/\D/g, "");
-                                if (val.length <= 10) handleInputChange(e);
-                              }}
-                            >
-                              {(inputProps) => (
-                                <input
-                                  {...inputProps}
-                                  type="text"
-                                  className="form-control"
-                                  id="phone"
-                                  name="phone"
-                                />
-                              )}
-                            </InputMask>
+                              onChange={handleInputChange}
+                              placeholder="(123) 456-7890"
+                            />
                           </div>
                         </div>
                       </div>

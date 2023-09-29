@@ -29,8 +29,8 @@ function App() {
   return (
     <>
       <div className="d-flex flex-column min-vh-100">
+        <Navbar />
         <ErrorBoundary>
-          <Navbar />
           <div
             className="container flex-grow-1"
             style={{ paddingBottom: "60px" }}
